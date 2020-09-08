@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,12 +18,13 @@ public class Server implements Runnable {
         new Thread(server).start();
     }
 
-    public void forward() {
-//        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//        System.out.print("Sending string: '" + data + "'\n");
-//
-//        out.print(data);
-//        out.close();
+    public void forward(Message message) throws IOException {
+        for (Socket socket : clients) {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+            out.print(message.toString());
+            out.close();
+        }
     }
 
     @Override

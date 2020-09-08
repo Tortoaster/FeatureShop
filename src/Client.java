@@ -95,9 +95,8 @@ public class Client implements Runnable {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.print("Received string: '");
 
-            while (!in.ready()) {
-            }
-            System.out.println(in.readLine()); // Read one line and output it
+            while (!in.ready()) {}
+            System.out.println(in.readLine());
 
             System.out.print("'\n");
             in.close();
