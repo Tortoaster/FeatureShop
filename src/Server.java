@@ -8,11 +8,9 @@ import java.util.Scanner;
 
 public class Server {
 
-    public static final int PORT = 7777;
+    public static final int PORT = 7777, MAX_CLIENTS = 64;
 
-    private boolean running = true;
-
-    private final List<Clientje> clients = new ArrayList<>();
+    private final List<ServerClient> clients = new ArrayList<>();
 
     public static void main(String[] args) {
         new Server();
@@ -23,12 +21,12 @@ public class Server {
             ServerSocket server = new ServerSocket(PORT);
             System.out.println("Server started");
 
-            while (running) {
+            while (clients.size() < MAX_CLIENTS) {
                 Socket socket = server.accept();
-                clients.add(new Clientje(socket, this));
+                clients.add(new ServerClient(socket, this));
             }
 
-            for (Clientje c : clients) {
+            for (ServerClient c : clients) {
                 c.close();
             }
 
@@ -39,12 +37,12 @@ public class Server {
     }
 
     public void forward(Message message) {
-        for (Clientje c : clients) {
+        for (ServerClient c : clients) {
             c.send(message);
         }
     }
 
-    private static class Clientje implements Runnable {
+    private static class ServerClient implements Runnable {
 
         private final Socket socket;
         private final Server server;
@@ -52,9 +50,7 @@ public class Server {
         private PrintWriter out;
         private Scanner in;
 
-        private final Thread thread = new Thread(this);
-
-        public Clientje(Socket socket, Server server) {
+        public ServerClient(Socket socket, Server server) {
             this.socket = socket;
             this.server = server;
 
@@ -65,9 +61,7 @@ public class Server {
                 e.printStackTrace();
             }
 
-            thread.start();
-
-            System.out.println(socket.getRemoteSocketAddress() + " connected");
+            new Thread(this).start();
         }
 
         public void send(Message message) {
@@ -77,21 +71,15 @@ public class Server {
         public void close() throws IOException {
             server.clients.remove(this);
 
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             in.close();
             out.close();
             socket.close();
-
-            System.out.println(socket.getRemoteSocketAddress() + " disconnected");
         }
 
         @Override
         public void run() {
+            System.out.println(socket.getRemoteSocketAddress() + " connected");
+
             while (in.hasNextLine()) {
                 Message message = Message.fromString(in.nextLine());
 
@@ -112,6 +100,8 @@ public class Server {
                 close();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                System.out.println(socket.getRemoteSocketAddress() + " disconnected");
             }
         }
     }
