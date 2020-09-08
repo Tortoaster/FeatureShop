@@ -83,7 +83,11 @@ public class Client implements Runnable {
                             @Override
                             public void actionPerformed(ActionEvent actionEvent) {
                                 Message message = new Message(text.getText(), color.getText());
-                                out.write(message.toString());
+
+                                message.encrypt(Cipher.ROT13);
+                                message.encrypt(Cipher.REVERSE);
+
+                                out.println(message.toString());
                                 text.setText("");
                             }
                         });
@@ -121,8 +125,8 @@ public class Client implements Runnable {
             e.printStackTrace();
         }
 
-        while (in.hasNext()) {
-            Message message = Message.fromString(in.next());
+        while (in.hasNextLine()) {
+            Message message = Message.fromString(in.nextLine());
 
             message.decrypt(Cipher.ROT13);
             message.decrypt(Cipher.REVERSE);

@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,6 +7,42 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Server {
+
+    public static final int PORT = 7777;
+
+    private boolean running = true;
+
+    private final List<Clientje> clients = new ArrayList<>();
+
+    public static void main(String[] args) {
+        new Server();
+    }
+
+    public Server() {
+        try {
+            ServerSocket server = new ServerSocket(PORT);
+            System.out.println("Server started");
+
+            while (running) {
+                Socket socket = server.accept();
+                clients.add(new Clientje(socket, this));
+            }
+
+            for (Clientje c : clients) {
+                c.close();
+            }
+
+            server.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void forward(Message message) {
+        for (Clientje c : clients) {
+            c.send(message);
+        }
+    }
 
     private static class Clientje implements Runnable {
 
@@ -24,17 +59,19 @@ public class Server {
             this.server = server;
 
             try {
-                in = new Scanner(new InputStreamReader(socket.getInputStream()));
+                in = new Scanner(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             thread.start();
+
+            System.out.println(socket.getRemoteSocketAddress() + " connected");
         }
 
         public void send(Message message) {
-            out.write(message.toString());
+            out.println(message.toString());
         }
 
         public void close() throws IOException {
@@ -49,12 +86,14 @@ public class Server {
             in.close();
             out.close();
             socket.close();
+
+            System.out.println(socket.getRemoteSocketAddress() + " disconnected");
         }
 
         @Override
         public void run() {
-            while (in.hasNext()) {
-                Message message = Message.fromString(in.next());
+            while (in.hasNextLine()) {
+                Message message = Message.fromString(in.nextLine());
 
                 message.setSender(socket.getRemoteSocketAddress().toString());
 
@@ -74,43 +113,6 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public static final int PORT = 7777;
-
-    private boolean running = true;
-
-    private final List<Clientje> clients = new ArrayList<>();
-
-    public static void main(String[] args) {
-        new Server();
-    }
-
-    public Server() {
-        try {
-            ServerSocket server = new ServerSocket(PORT);
-            System.out.println("Server started\n");
-
-            while (running) {
-                Socket socket = server.accept();
-                clients.add(new Clientje(socket, this));
-                System.out.println(socket.getRemoteSocketAddress() + " connected");
-            }
-
-            for (Clientje c : clients) {
-                c.close();
-            }
-
-            server.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void forward(Message message) {
-        for (Clientje c : clients) {
-            c.send(message);
         }
     }
 }

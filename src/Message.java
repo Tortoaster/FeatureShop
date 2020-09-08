@@ -24,7 +24,7 @@ public class Message {
 
     public static Message fromString(String string) {
         String[] split = string.split(" ", 4);
-        Message message = new Message(split[2].substring(0, split[2].length() - 2), split[3]);
+        Message message = new Message(split[3], split[2].substring(0, split[2].length() - 2));
         message.setSender(split[0]);
         return message;
     }
