@@ -1,4 +1,3 @@
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -6,18 +5,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Server {
 
     private static class Clientje implements Runnable {
 
-        private boolean running = true;
-
         private final Socket socket;
         private final Server server;
 
         private PrintWriter out;
-        private BufferedReader in;
+        private Scanner in;
 
         private final Thread thread = new Thread(this);
 
@@ -26,7 +24,7 @@ public class Server {
             this.server = server;
 
             try {
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                in = new Scanner(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -42,8 +40,6 @@ public class Server {
         public void close() throws IOException {
             server.clients.remove(this);
 
-            running = false;
-
             try {
                 thread.join();
             } catch (InterruptedException e) {
@@ -57,35 +53,26 @@ public class Server {
 
         @Override
         public void run() {
-            while (running) {
-                try {
-                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1");
-                    while (!in.ready()) {
-                        if(!running) break;
-                    }
+            while (in.hasNext()) {
+                Message message = Message.fromString(in.next());
 
-                    Message message = Message.fromString(in.readLine());
+                message.setSender(socket.getRemoteSocketAddress().toString());
 
-                    message.setSender(socket.getRemoteSocketAddress().toString());
+                message.decrypt(Cipher.REVERSE);
+                message.decrypt(Cipher.ROT13);
 
-                    message.decrypt(Cipher.REVERSE);
-                    message.decrypt(Cipher.ROT13);
+                System.out.println(message);
 
-                    System.out.println(message);
+                message.encrypt(Cipher.ROT13);
+                message.encrypt(Cipher.REVERSE);
 
-                    message.encrypt(Cipher.ROT13);
-                    message.encrypt(Cipher.REVERSE);
+                server.forward(message);
+            }
 
-                    server.forward(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            try {
+                close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

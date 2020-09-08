@@ -2,21 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client implements Runnable {
 
-    private boolean running = true;
+    private final JTextField ip;
+    private final JTextField port;
+    private final JTextArea messages;
 
-    private JTextField ip;
-    private JTextField port;
-    private JTextArea messages;
-
-    private BufferedReader in;
+    private Scanner in;
     private PrintWriter out;
 
     public static void main(String[] args) {
@@ -118,24 +115,19 @@ public class Client implements Runnable {
     public void run() {
         try {
             Socket socket = new Socket(ip.getText(), Integer.parseInt(port.getText()));
-
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream(), true);
-
-            while(running) {
-                while (!in.ready()) {
-                    if(!running) break;
-                }
-
-                Message message = Message.fromString(in.readLine());
-
-                message.decrypt(Cipher.ROT13);
-                message.decrypt(Cipher.REVERSE);
-
-                messages.setText(messages.getText() + "\n" + message.toString());
-            }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        while (in.hasNext()) {
+            Message message = Message.fromString(in.next());
+
+            message.decrypt(Cipher.ROT13);
+            message.decrypt(Cipher.REVERSE);
+
+            messages.setText(messages.getText() + "\n" + message.toString());
         }
     }
 }
