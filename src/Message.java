@@ -1,9 +1,11 @@
 public class Message {
 
+    private final String sender;
     private String content;
-    private String color;
+    private final String color;
 
-    public Message(String content, String color) {
+    public Message(String sender, String content, String color) {
+        this.sender = sender;
         this.content = content;
         this.color = color;
     }
@@ -18,6 +20,11 @@ public class Message {
 
     @Override
     public String toString() {
-        return "(" + color + ") " + content;
+        return sender + " (in " + color + "): " + content;
+    }
+
+    public static Message fromString(String string) {
+        String[] split = string.split(" ", 4);
+        return new Message(split[0], split[2].substring(0, split[2].length() - 2), split[3]);
     }
 }

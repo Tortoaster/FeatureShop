@@ -1,53 +1,115 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Server implements Runnable {
+public class Server {
 
-    public static final int PORT = 7777;
+    private static class Clientje implements Runnable {
 
-    private boolean running;
+        private boolean running = true;
 
-    private List<Socket> clients = new ArrayList<>();
+        private final Socket socket;
+        private final Server server;
 
-    public static void main(String[] args) {
-        Server server = new Server();
-        new Thread(server).start();
-    }
+        private PrintWriter out;
+        private BufferedReader in;
 
-    public void forward(Message message) throws IOException {
-        for (Socket socket : clients) {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        private final Thread thread = new Thread(this);
 
-            out.print(message.toString());
+        public Clientje(Socket socket, Server server) {
+            this.socket = socket;
+            this.server = server;
+
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            thread.start();
+        }
+
+        public void send(Message message) {
+            out.write(message.toString());
+        }
+
+        public void close() throws IOException {
+            running = false;
+
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            in.close();
             out.close();
+            socket.close();
+        }
+
+        @Override
+        public void run() {
+            while (running) {
+                try {
+                    while (!in.ready()) {}
+                    Message message = Message.fromString(in.readLine());
+
+                    message.decrypt(Cipher.REVERSE);
+                    message.decrypt(Cipher.ROT13);
+
+                    System.out.println(message);
+
+                    message.encrypt(Cipher.ROT13);
+                    message.encrypt(Cipher.REVERSE);
+
+                    server.forward(message);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    @Override
-    public void run() {
+    public static final int PORT = 7777;
+
+    private boolean running = true;
+
+    private final List<Clientje> clients = new ArrayList<>();
+
+    public static void main(String[] args) {
+        new Server();
+    }
+
+    public Server() {
         try {
             ServerSocket server = new ServerSocket(PORT);
             System.out.println("Server started\n");
 
-            running = true;
-
             while (running) {
                 Socket socket = server.accept();
-                clients.add(socket);
+                clients.add(new Clientje(socket, this));
                 System.out.println(socket.getRemoteSocketAddress() + " connected");
             }
 
-            for (Socket socket : clients) {
-                socket.close();
+            for (Clientje c : clients) {
+                c.close();
             }
 
             server.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void forward(Message message) {
+        for (Clientje c : clients) {
+            c.send(message);
         }
     }
 }
