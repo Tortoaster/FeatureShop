@@ -40,6 +40,8 @@ public class Server {
         }
 
         public void close() throws IOException {
+            server.clients.remove(this);
+
             running = false;
 
             try {
@@ -57,7 +59,10 @@ public class Server {
         public void run() {
             while (running) {
                 try {
-                    while (!in.ready()) {}
+                    while (!in.ready()) {
+                        if(!running) break;
+                    }
+
                     Message message = Message.fromString(in.readLine());
 
                     message.decrypt(Cipher.REVERSE);
@@ -71,6 +76,12 @@ public class Server {
                     server.forward(message);
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    try {
+                        close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
