@@ -59,11 +59,14 @@ public class Server {
         public void run() {
             while (running) {
                 try {
+                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1");
                     while (!in.ready()) {
                         if(!running) break;
                     }
 
                     Message message = Message.fromString(in.readLine());
+
+                    message.setSender(socket.getRemoteSocketAddress().toString());
 
                     message.decrypt(Cipher.REVERSE);
                     message.decrypt(Cipher.ROT13);

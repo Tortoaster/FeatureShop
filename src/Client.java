@@ -3,10 +3,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client implements Runnable {
+
+    private boolean running = true;
+
+    private JTextField ip;
+    private JTextField port;
+    private JTextArea messages;
+
+    private BufferedReader in;
+    private PrintWriter out;
 
     public static void main(String[] args) {
         new Client();
@@ -24,10 +35,10 @@ public class Client implements Runnable {
                     JPanel fields = new JPanel(new GridLayout(3, 2));
                     {
                         JLabel ipLabel = new JLabel("IP: ");
-                        JTextField ip = new JTextField("localhost");
+                        ip = new JTextField("localhost");
 
                         JLabel portLabel = new JLabel("Port: ");
-                        JTextField port = new JTextField("" + Server.PORT);
+                        port = new JTextField("" + Server.PORT);
 
                         JLabel passLabel = new JLabel("Password: ");
                         JPasswordField pass = new JPasswordField();
@@ -41,10 +52,12 @@ public class Client implements Runnable {
                     }
 
                     JButton button = new JButton("Log in");
+                    Client client = this;
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
-
+                            ((CardLayout) panel.getLayout()).next(panel);
+                            new Thread(client).start();
                         }
                     });
 
@@ -56,17 +69,30 @@ public class Client implements Runnable {
                 {
                     chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
-                    JTextArea messages = new JTextArea();
+                    messages = new JTextArea();
 
                     JPanel input = new JPanel();
                     {
+                        JTextField color = new JTextField("black");
+                        color.setToolTipText("color");
+                        color.setPreferredSize(new Dimension(100, 30));
+
                         JTextField text = new JTextField();
                         text.setToolTipText("Say something...");
-                        text.setPreferredSize(new Dimension(400, 30));
+                        text.setPreferredSize(new Dimension(300, 30));
 
                         JButton send = new JButton("Send");
+                        send.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent actionEvent) {
+                                Message message = new Message(text.getText(), color.getText());
+                                out.write(message.toString());
+                                text.setText("");
+                            }
+                        });
                         messages.setPreferredSize(new Dimension(100, 30));
 
+                        input.add(color);
                         input.add(text);
                         input.add(send);
                     }
@@ -91,17 +117,25 @@ public class Client implements Runnable {
     @Override
     public void run() {
         try {
-            Socket socket = new Socket("localhost", Server.PORT);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            System.out.print("Received string: '");
+            Socket socket = new Socket(ip.getText(), Integer.parseInt(port.getText()));
 
-            while (!in.ready()) {}
-            System.out.println(in.readLine());
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
 
-            System.out.print("'\n");
-            in.close();
-        } catch (Exception e) {
-            System.out.print("Whoops! It didn't work!\n");
+            while(running) {
+                while (!in.ready()) {
+                    if(!running) break;
+                }
+
+                Message message = Message.fromString(in.readLine());
+
+                message.decrypt(Cipher.ROT13);
+                message.decrypt(Cipher.REVERSE);
+
+                messages.setText(messages.getText() + "\n" + message.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
