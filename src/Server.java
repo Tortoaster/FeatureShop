@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -8,9 +10,14 @@ import java.util.Scanner;
 
 public class Server {
 
-    public static final int PORT = 7777, MAX_CLIENTS = 64;
+    public static final byte CODE_LOGIN = 1, CODE_MESSAGE = 2;
+    public static final int PORT = 7777;
+
+    private static final String PASSWORD = "12345";
 
     private final List<ServerClient> clients = new ArrayList<>();
+
+    private PrintWriter log;
 
     public static void main(String[] args) {
         new Server();
@@ -18,21 +25,21 @@ public class Server {
 
     public Server() {
         try {
-            ServerSocket server = new ServerSocket(PORT);
-            System.out.println("Server started");
+            log = new PrintWriter(new BufferedWriter(new FileWriter("logs/server/log.txt", true)), true);
 
-            while (clients.size() < MAX_CLIENTS) {
+            ServerSocket server = new ServerSocket(PORT);
+            log.println("Server started");
+
+            while (true) {
                 Socket socket = server.accept();
                 clients.add(new ServerClient(socket, this));
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             for (ServerClient c : clients) {
                 c.close();
             }
-
-            server.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -43,6 +50,8 @@ public class Server {
     }
 
     private static class ServerClient implements Runnable {
+
+        private boolean verified;
 
         private final Socket socket;
         private final Server server;
@@ -65,44 +74,68 @@ public class Server {
         }
 
         public void send(Message message) {
-            out.println(message.toString());
+            out.println(message);
         }
 
-        public void close() throws IOException {
+        public void close() {
             server.clients.remove(this);
 
             in.close();
             out.close();
-            socket.close();
+
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            server.log.println(socket.getRemoteSocketAddress() + " disconnected");
         }
 
         @Override
         public void run() {
-            System.out.println(socket.getRemoteSocketAddress() + " connected");
+            server.log.println(socket.getRemoteSocketAddress() + " connected");
 
+            loop:
             while (in.hasNextLine()) {
-                Message message = Message.fromString(in.nextLine());
+                byte code = in.nextByte();
+                in.nextLine();
+                switch (code) {
+                    case CODE_LOGIN:
+                        String password = in.nextLine();
 
-                message.setSender(socket.getRemoteSocketAddress().toString());
+                        if (password.equals(PASSWORD)) {
+                            verified = true;
+                            out.println(true);
+                        } else {
+                            server.log.println("Wrong password: " + password);
+                            out.println(false);
+                            break loop;
+                        }
 
-                message.decrypt(Cipher.REVERSE);
-                message.decrypt(Cipher.ROT13);
+                        break;
+                    case CODE_MESSAGE:
+                        Message message = Message.fromString(in.nextLine());
 
-                System.out.println(message);
+                        message.setSender(socket.getRemoteSocketAddress().toString());
 
-                message.encrypt(Cipher.ROT13);
-                message.encrypt(Cipher.REVERSE);
+                        if (verified) {
+                            message.decrypt(Cipher.REVERSE);
+                            message.decrypt(Cipher.ROT13);
 
-                server.forward(message);
+                            server.log.println(message);
+
+                            message.encrypt(Cipher.ROT13);
+                            message.encrypt(Cipher.REVERSE);
+
+                            server.forward(message);
+                        }
+
+                        break;
+                }
             }
 
-            try {
-                close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                System.out.println(socket.getRemoteSocketAddress() + " disconnected");
-            }
+            close();
         }
     }
 }

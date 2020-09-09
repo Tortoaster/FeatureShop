@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -10,23 +12,35 @@ import java.util.Scanner;
 
 public class Client implements Runnable {
 
-    private final JTextField ip;
-    private final JTextField port;
-    private final JTextField pass;
+    private JTextField ip;
+    private JTextField port;
+    private JTextField pass;
     private ArrayList<JLabel> messages = new ArrayList<>();
-    private final JPanel messagesPanel;
-    private final JPanel panel;
+    private JPanel messagesPanel;
+    private JPanel panel;
 
     private Color color = Color.BLACK;
 
     private Scanner in;
     private PrintWriter out;
 
+    private PrintWriter log;
+
     public static void main(String[] args) {
         new Client();
     }
 
     public Client() {
+        try {
+            log = new PrintWriter(new BufferedWriter(new FileWriter("logs/client/log.txt", true)), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        createUI();
+    }
+
+    private void createUI() {
         JFrame frame = new JFrame();
         {
             panel = new JPanel(new CardLayout());
@@ -55,18 +69,10 @@ public class Client implements Runnable {
                     }
 
                     JButton button = new JButton("Log in");
-                    Client client = this;
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
-                            new Thread(client).start();
-
-                            Message message = new Message(true, pass.getText());
-
-                            message.encrypt(Cipher.ROT13);
-                            message.encrypt(Cipher.REVERSE);
-
-                            out.println(message.toString());
+                            new Thread(Client.this).start();
                         }
                     });
 
@@ -83,15 +89,8 @@ public class Client implements Runnable {
 
                     JPanel input = new JPanel();
                     {
-                        ColorPicker colorPicker = new ColorPicker(color);
-                            colorPicker.addColorChangedListener(new ColorPicker.ColorChangedListener() {
-                            @Override
-                            public void colorChanged(Color newColor) {
-                                color = newColor;
-                            }
-                        });
-                        colorPicker.setToolTipText("color");
-                        colorPicker.setPreferredSize(new Dimension(30, 30));
+                        JColorButton color = new JColorButton(Color.BLACK);
+                        color.setPreferredSize(new Dimension(30, 30));
 
                         JTextField text = new JTextField();
                         text.setToolTipText("Say something...");
@@ -101,18 +100,19 @@ public class Client implements Runnable {
                         send.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent actionEvent) {
-                                Message message = new Message(text.getText(), color);
+                                Message message = new Message(text.getText(), color.getSelectedColor());
 
                                 message.encrypt(Cipher.ROT13);
                                 message.encrypt(Cipher.REVERSE);
 
+                                out.println(Server.CODE_MESSAGE);
                                 out.println(message.toString());
                                 text.setText("");
                             }
                         });
                         messagesPanel.setPreferredSize(new Dimension(100, 30));
 
-                        input.add(colorPicker);
+                        input.add(color);
                         input.add(text);
                         input.add(send);
                     }
@@ -131,7 +131,6 @@ public class Client implements Runnable {
             frame.pack();
             frame.setVisible(true);
         }
-
     }
 
     @Override
@@ -143,26 +142,32 @@ public class Client implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ((CardLayout) panel.getLayout()).next(panel);
 
-        while (in.hasNextLine()) {
-            Message message = Message.fromString(in.nextLine());
+        out.println(Server.CODE_LOGIN);
+        out.println(pass.getText());
 
-            if(message.getIsLogin()) {
-                continue;
+        if(in.nextBoolean()) {
+            in.nextLine();
+            ((CardLayout) panel.getLayout()).next(panel);
+
+            while (in.hasNextLine()) {
+                Message message = Message.fromString(in.nextLine());
+
+                message.decrypt(Cipher.ROT13);
+                message.decrypt(Cipher.REVERSE);
+
+                log.println(message);
+
+                JLabel label = new JLabel(message.getSender() + " " + message.getContent());
+                label.setForeground(message.getColor());
+                label.setBackground(Color.WHITE);
+                messagesPanel.add(label);
+                messagesPanel.validate();
+                messagesPanel.repaint();
             }
-
-            message.decrypt(Cipher.ROT13);
-            message.decrypt(Cipher.REVERSE);
-
-            System.out.println(message.getContent());
-
-            JLabel label = new JLabel(message.getSender() + " " + message.getContent());
-            label.setForeground(message.getColor());
-            label.setBackground(Color.WHITE);
-            messagesPanel.add(label);
-            messagesPanel.validate();
-            messagesPanel.repaint();
         }
+
+        in.close();
+        out.close();
     }
 }
