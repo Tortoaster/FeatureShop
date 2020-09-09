@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client implements Runnable {
@@ -15,11 +14,8 @@ public class Client implements Runnable {
     private JTextField ip;
     private JTextField port;
     private JTextField pass;
-    private ArrayList<JLabel> messages = new ArrayList<>();
-    private JPanel messagesPanel;
+    private JPanel messages;
     private JPanel panel;
-
-    private Color color = Color.BLACK;
 
     private Scanner in;
     private PrintWriter out;
@@ -84,8 +80,7 @@ public class Client implements Runnable {
                 {
                     chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
-                    messagesPanel = new JPanel();
-//                    messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
+                    messages = new JPanel();
 
                     JPanel input = new JPanel();
                     {
@@ -110,14 +105,14 @@ public class Client implements Runnable {
                                 text.setText("");
                             }
                         });
-                        messagesPanel.setPreferredSize(new Dimension(100, 30));
+                        messages.setPreferredSize(new Dimension(100, 30));
 
                         input.add(color);
                         input.add(text);
                         input.add(send);
                     }
 
-                    chat.add(messagesPanel);
+                    chat.add(messages);
                     chat.add(input);
                 }
 
@@ -146,7 +141,7 @@ public class Client implements Runnable {
         out.println(Server.CODE_LOGIN);
         out.println(pass.getText());
 
-        if(in.nextBoolean()) {
+        if (in.nextBoolean()) {
             in.nextLine();
             ((CardLayout) panel.getLayout()).next(panel);
 
@@ -161,9 +156,9 @@ public class Client implements Runnable {
                 JLabel label = new JLabel(message.getSender() + " " + message.getContent());
                 label.setForeground(message.getColor());
                 label.setBackground(Color.WHITE);
-                messagesPanel.add(label);
-                messagesPanel.validate();
-                messagesPanel.repaint();
+                messages.add(label);
+                messages.validate();
+                messages.repaint();
             }
         }
 
