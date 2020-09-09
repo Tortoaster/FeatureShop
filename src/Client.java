@@ -15,8 +15,6 @@ public class Client implements Runnable {
     private final JTextArea messages;
     private final JPanel panel;
 
-    private Color color = Color.BLACK;
-
     private Scanner in;
     private PrintWriter out;
 
@@ -80,16 +78,8 @@ public class Client implements Runnable {
 
                     JPanel input = new JPanel();
                     {
-                        ColorPicker colorPicker = new ColorPicker(color);
-                            colorPicker.addColorChangedListener(new ColorPicker.ColorChangedListener() {
-                            @Override
-                            public void colorChanged(Color newColor) {
-                                color = newColor;
-                                messages.setBackground(newColor);
-                            }
-                        });
-                        colorPicker.setToolTipText("color");
-                        colorPicker.setPreferredSize(new Dimension(30, 30));
+                        JColorButton color = new JColorButton(Color.BLACK);
+                        color.setPreferredSize(new Dimension(30, 30));
 
                         JTextField text = new JTextField();
                         text.setToolTipText("Say something...");
@@ -99,7 +89,7 @@ public class Client implements Runnable {
                         send.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent actionEvent) {
-                                Message message = new Message(text.getText(), color);
+                                Message message = new Message(text.getText(), color.getSelectedColor());
 
                                 message.encrypt(Cipher.ROT13);
                                 message.encrypt(Cipher.REVERSE);
@@ -110,7 +100,7 @@ public class Client implements Runnable {
                         });
                         messages.setPreferredSize(new Dimension(100, 30));
 
-                        input.add(colorPicker);
+                        input.add(color);
                         input.add(text);
                         input.add(send);
                     }
