@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client implements Runnable {
@@ -12,7 +13,8 @@ public class Client implements Runnable {
     private final JTextField ip;
     private final JTextField port;
     private final JTextField pass;
-    private final JTextArea messages;
+    private ArrayList<JLabel> messages = new ArrayList<>();
+    private final JPanel messagesPanel;
     private final JPanel panel;
 
     private Color color = Color.BLACK;
@@ -76,7 +78,8 @@ public class Client implements Runnable {
                 {
                     chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
-                    messages = new JTextArea();//new JTextArea();
+                    messagesPanel = new JPanel();
+//                    messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
 
                     JPanel input = new JPanel();
                     {
@@ -85,7 +88,6 @@ public class Client implements Runnable {
                             @Override
                             public void colorChanged(Color newColor) {
                                 color = newColor;
-                                messages.setBackground(newColor);
                             }
                         });
                         colorPicker.setToolTipText("color");
@@ -108,14 +110,14 @@ public class Client implements Runnable {
                                 text.setText("");
                             }
                         });
-                        messages.setPreferredSize(new Dimension(100, 30));
+                        messagesPanel.setPreferredSize(new Dimension(100, 30));
 
                         input.add(colorPicker);
                         input.add(text);
                         input.add(send);
                     }
 
-                    chat.add(messages);
+                    chat.add(messagesPanel);
                     chat.add(input);
                 }
 
@@ -153,7 +155,14 @@ public class Client implements Runnable {
             message.decrypt(Cipher.ROT13);
             message.decrypt(Cipher.REVERSE);
 
-            messages.setText(messages.getText() + "\n" + message.toString());
+            System.out.println(message.getContent());
+
+            JLabel label = new JLabel(message.getSender() + " " + message.getContent());
+            label.setForeground(message.getColor());
+            label.setBackground(Color.WHITE);
+            messagesPanel.add(label);
+            messagesPanel.validate();
+            messagesPanel.repaint();
         }
     }
 }

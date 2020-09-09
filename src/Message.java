@@ -41,6 +41,10 @@ public class Message {
 
     public String getContent() { return content; }
 
+    public String getSender() { return sender; }
+
+    public Color getColor() { return color; }
+
     public void setSender(String sender) {
         this.sender = sender;
     }
