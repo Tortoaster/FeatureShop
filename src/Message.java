@@ -1,10 +1,18 @@
+import java.awt.*;
+
 public class Message {
 
     private String sender;
+    private boolean isLogin = false;
     private String content;
-    private final String color;
+    private Color color = Color.BLACK;
 
-    public Message(String content, String color) {
+    public Message(boolean isLogin, String password) {
+        this.isLogin = isLogin;
+        this.content = password;
+    }
+
+    public Message(String content, Color color) {
         this.content = content;
         this.color = color;
     }
@@ -19,15 +27,19 @@ public class Message {
 
     @Override
     public String toString() {
-        return sender + " (in " + color + "): " + content;
+        return color.getRGB() + " " + sender + ": " + content;
     }
 
     public static Message fromString(String string) {
         String[] split = string.split(" ", 4);
-        Message message = new Message(split[3], split[2].substring(0, split[2].length() - 2));
-        message.setSender(split[0]);
+        Message message = new Message(split[2], new Color(Integer.parseInt(split[0])));
+        message.setSender(split[1]);
         return message;
     }
+
+    public boolean getIsLogin() { return isLogin; }
+
+    public String getContent() { return content; }
 
     public void setSender(String sender) {
         this.sender = sender;

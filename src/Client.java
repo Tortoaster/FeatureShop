@@ -11,7 +11,11 @@ public class Client implements Runnable {
 
     private final JTextField ip;
     private final JTextField port;
+    private final JTextField pass;
     private final JTextArea messages;
+    private final JPanel panel;
+
+    private Color color = Color.BLACK;
 
     private Scanner in;
     private PrintWriter out;
@@ -23,7 +27,7 @@ public class Client implements Runnable {
     public Client() {
         JFrame frame = new JFrame();
         {
-            JPanel panel = new JPanel(new CardLayout());
+            panel = new JPanel(new CardLayout());
             {
                 JPanel login = new JPanel();
                 {
@@ -38,7 +42,7 @@ public class Client implements Runnable {
                         port = new JTextField("" + Server.PORT);
 
                         JLabel passLabel = new JLabel("Password: ");
-                        JPasswordField pass = new JPasswordField();
+                        pass = new JPasswordField();
 
                         fields.add(ipLabel);
                         fields.add(ip);
@@ -53,8 +57,14 @@ public class Client implements Runnable {
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
-                            ((CardLayout) panel.getLayout()).next(panel);
                             new Thread(client).start();
+
+                            Message message = new Message(true, pass.getText());
+
+                            message.encrypt(Cipher.ROT13);
+                            message.encrypt(Cipher.REVERSE);
+
+                            out.println(message.toString());
                         }
                     });
 
@@ -66,13 +76,20 @@ public class Client implements Runnable {
                 {
                     chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
-                    messages = new JTextArea();
+                    messages = new JTextArea();//new JTextArea();
 
                     JPanel input = new JPanel();
                     {
-                        JTextField color = new JTextField("black");
-                        color.setToolTipText("color");
-                        color.setPreferredSize(new Dimension(100, 30));
+                        ColorPicker colorPicker = new ColorPicker(color);
+                            colorPicker.addColorChangedListener(new ColorPicker.ColorChangedListener() {
+                            @Override
+                            public void colorChanged(Color newColor) {
+                                color = newColor;
+                                messages.setBackground(newColor);
+                            }
+                        });
+                        colorPicker.setToolTipText("color");
+                        colorPicker.setPreferredSize(new Dimension(30, 30));
 
                         JTextField text = new JTextField();
                         text.setToolTipText("Say something...");
@@ -82,7 +99,7 @@ public class Client implements Runnable {
                         send.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent actionEvent) {
-                                Message message = new Message(text.getText(), color.getText());
+                                Message message = new Message(text.getText(), color);
 
                                 message.encrypt(Cipher.ROT13);
                                 message.encrypt(Cipher.REVERSE);
@@ -93,7 +110,7 @@ public class Client implements Runnable {
                         });
                         messages.setPreferredSize(new Dimension(100, 30));
 
-                        input.add(color);
+                        input.add(colorPicker);
                         input.add(text);
                         input.add(send);
                     }
@@ -124,9 +141,14 @@ public class Client implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        ((CardLayout) panel.getLayout()).next(panel);
 
         while (in.hasNextLine()) {
             Message message = Message.fromString(in.nextLine());
+
+            if(message.getIsLogin()) {
+                continue;
+            }
 
             message.decrypt(Cipher.ROT13);
             message.decrypt(Cipher.REVERSE);
