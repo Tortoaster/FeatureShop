@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,20 +11,32 @@ import java.util.Scanner;
 
 public class Client implements Runnable {
 
-    private final JTextField ip;
-    private final JTextField port;
-    private final JTextField pass;
-    private final JTextArea messages;
-    private final JPanel panel;
+    private JTextField ip;
+    private JTextField port;
+    private JTextField pass;
+    private JTextArea messages;
+    private JPanel panel;
 
     private Scanner in;
     private PrintWriter out;
+
+    private PrintWriter log;
 
     public static void main(String[] args) {
         new Client();
     }
 
     public Client() {
+        try {
+            log = new PrintWriter(new BufferedWriter(new FileWriter("logs/client/log.txt", true)), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        createUI();
+    }
+
+    private void createUI() {
         JFrame frame = new JFrame();
         {
             panel = new JPanel(new CardLayout());
@@ -137,7 +151,7 @@ public class Client implements Runnable {
                 message.decrypt(Cipher.ROT13);
                 message.decrypt(Cipher.REVERSE);
 
-                System.out.println(message);
+                log.println(message);
 
                 messages.setText(messages.getText() + "\n" + message.toString());
             }
