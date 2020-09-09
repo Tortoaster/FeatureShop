@@ -1,16 +1,11 @@
 import java.awt.*;
+import java.io.Serializable;
 
-public class Message {
+public class Message implements Serializable {
 
     private String sender;
-    private boolean isLogin = false;
     private String content;
-    private Color color = Color.BLACK;
-
-    public Message(boolean isLogin, String password) {
-        this.isLogin = isLogin;
-        this.content = password;
-    }
+    private final Color color;
 
     public Message(String content, Color color) {
         this.content = content;
@@ -36,10 +31,6 @@ public class Message {
         message.setSender(split[1]);
         return message;
     }
-
-    public boolean getIsLogin() { return isLogin; }
-
-    public String getContent() { return content; }
 
     public void setSender(String sender) {
         this.sender = sender;

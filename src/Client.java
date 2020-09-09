@@ -51,18 +51,10 @@ public class Client implements Runnable {
                     }
 
                     JButton button = new JButton("Log in");
-                    Client client = this;
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
-                            new Thread(client).start();
-
-                            Message message = new Message(true, pass.getText());
-
-                            message.encrypt(Cipher.ROT13);
-                            message.encrypt(Cipher.REVERSE);
-
-                            out.println(message.toString());
+                            new Thread(Client.this).start();
                         }
                     });
 
@@ -94,6 +86,7 @@ public class Client implements Runnable {
                                 message.encrypt(Cipher.ROT13);
                                 message.encrypt(Cipher.REVERSE);
 
+                                out.println(Server.CODE_MESSAGE);
                                 out.println(message.toString());
                                 text.setText("");
                             }
@@ -119,7 +112,6 @@ public class Client implements Runnable {
             frame.pack();
             frame.setVisible(true);
         }
-
     }
 
     @Override
@@ -131,19 +123,27 @@ public class Client implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ((CardLayout) panel.getLayout()).next(panel);
 
-        while (in.hasNextLine()) {
-            Message message = Message.fromString(in.nextLine());
+        out.println(Server.CODE_LOGIN);
+        out.println(pass.getText());
 
-            if(message.getIsLogin()) {
-                continue;
+        if(in.nextBoolean()) {
+            in.nextLine();
+            ((CardLayout) panel.getLayout()).next(panel);
+
+            while (in.hasNextLine()) {
+                Message message = Message.fromString(in.nextLine());
+
+                message.decrypt(Cipher.ROT13);
+                message.decrypt(Cipher.REVERSE);
+
+                System.out.println(message);
+
+                messages.setText(messages.getText() + "\n" + message.toString());
             }
-
-            message.decrypt(Cipher.ROT13);
-            message.decrypt(Cipher.REVERSE);
-
-            messages.setText(messages.getText() + "\n" + message.toString());
         }
+
+        in.close();
+        out.close();
     }
 }
