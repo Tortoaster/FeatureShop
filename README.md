@@ -50,4 +50,4 @@ so instead we had to force the programmer to only ever create one instance of th
 strategy and save that globally. Since the singleton pattern is ugly, we created an
 enumeration with abstract functions for encrypt and decrypt instead. While this doesn't
 look like the traditional Java strategy pattern, it's still some abstract type
-(`Cipher`) with concrete implementations (`ROT13`, `REVERSE`).
+(`Cipher`) with concrete implementations (`ROT13`, `REVERSE`), so we think it counts.
