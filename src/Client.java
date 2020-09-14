@@ -37,11 +37,12 @@ public class Client implements Runnable {
             }
 
             JPanel authPanel = new JPanel();
-            if (Conf.AUTH) {
+            {
                 pass = new JPasswordField(10);
-
-                serverPanel.add(new JLabel("Password: "));
-                serverPanel.add(pass);
+                if (Conf.AUTH) {
+                    authPanel.add(new JLabel("Password: "));
+                    authPanel.add(pass);
+                }
             }
 
             JButton button = new JButton("Log in");
