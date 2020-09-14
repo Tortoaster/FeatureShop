@@ -13,8 +13,6 @@ public class Server {
     public static final byte CODE_LOGIN = 1, CODE_MESSAGE = 2;
     public static final int PORT = 7777;
 
-    private static final String PASSWORD = "12345";
-
     private final List<ServerClient> clients = new ArrayList<>();
 
     private PrintWriter log;
@@ -28,7 +26,7 @@ public class Server {
             ServerSocket server = new ServerSocket(PORT);
 
             if(Conf.LOG) {
-                log = new PrintWriter(new BufferedWriter(new FileWriter("logs/server/log.txt", true)), true);
+                log = new PrintWriter(new BufferedWriter(new FileWriter(Conf.LOG_SERVER_PATH, true)), true);
                 log.println("Server started");
             }
 
@@ -107,7 +105,7 @@ public class Server {
                         String password = in.nextLine();
 
                         if(Conf.AUTH) {
-                            if (password.equals(PASSWORD)) {
+                            if (password.equals(Conf.AUTH_PASS)) {
                                 verified = true;
                                 out.println(true);
                             } else {
@@ -124,13 +122,17 @@ public class Server {
                         message.setSender(socket.getRemoteSocketAddress().toString());
 
                         if (verified) {
-                            message.decrypt(Cipher.REVERSE);
-                            message.decrypt(Cipher.ROT13);
+                            if(Conf.CRYPTO) {
+                                message.decrypt(Conf.CRYPTO_SECOND_LAYER);
+                                message.decrypt(Conf.CRYPTO_FIRST_LAYER);
+                            }
 
                             if(Conf.LOG) server.log.println(message);
 
-                            message.encrypt(Cipher.ROT13);
-                            message.encrypt(Cipher.REVERSE);
+                            if(Conf.CRYPTO) {
+                                message.encrypt(Conf.CRYPTO_FIRST_LAYER);
+                                message.encrypt(Conf.CRYPTO_SECOND_LAYER);
+                            }
 
                             server.forward(message);
                         }

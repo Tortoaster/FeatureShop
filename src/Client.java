@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 public class Client implements Runnable {
 
+    private static final int WIDTH = 500, HEIGHT = 500, UI_HEIGHT = 30;
+
     private JTextField ip;
     private JTextField port;
     private JTextField pass;
@@ -29,7 +31,7 @@ public class Client implements Runnable {
     public Client() {
         if(Conf.LOG) {
             try {
-                log = new PrintWriter(new BufferedWriter(new FileWriter("logs/client/log.txt", true)), true);
+                log = new PrintWriter(new BufferedWriter(new FileWriter(Conf.LOG_CLIENT_PATH, true)), true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -85,33 +87,44 @@ public class Client implements Runnable {
                     chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
                     messages = new JPanel();
+                    messages.setPreferredSize(new Dimension(WIDTH, HEIGHT - UI_HEIGHT));
 
                     JPanel input = new JPanel();
                     {
-                        JColorButton color = new JColorButton(Color.BLACK);
-                        color.setPreferredSize(new Dimension(30, 30));
+                        JColorButton color = new JColorButton(Conf.COLOR_DEFAULT);
+                        color.setPreferredSize(new Dimension(UI_HEIGHT, UI_HEIGHT));
+
+                        JButton send = new JButton("Send");
+                        send.setPreferredSize(new Dimension(100, UI_HEIGHT));
 
                         JTextField text = new JTextField();
                         text.setToolTipText("Say something...");
-                        text.setPreferredSize(new Dimension(300, 30));
+                        int width = WIDTH - send.getPreferredSize().width;
+                        if(Conf.COLOR) width -= color.getPreferredSize().width;
+                        text.setPreferredSize(new Dimension(width, UI_HEIGHT));
 
-                        JButton send = new JButton("Send");
                         send.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent actionEvent) {
-                                Message message = new Message(text.getText(), color.getSelectedColor());
+                                Message message;
+                                if(Conf.COLOR) message = new Message(text.getText(), color.getSelectedColor());
+                                else message = new Message(text.getText(), Conf.COLOR_DEFAULT);
 
-                                message.encrypt(Cipher.ROT13);
-                                message.encrypt(Cipher.REVERSE);
+                                if(Conf.CRYPTO) {
+                                    message.encrypt(Conf.CRYPTO_FIRST_LAYER);
+                                    message.encrypt(Conf.CRYPTO_SECOND_LAYER);
+                                }
 
                                 out.println(Server.CODE_MESSAGE);
                                 out.println(message.toString());
                                 text.setText("");
                             }
                         });
-                        messages.setPreferredSize(new Dimension(100, 30));
 
-                        input.add(color);
+                        if(Conf.COLOR) {
+                            input.add(color);
+                        }
+
                         input.add(text);
                         input.add(send);
                     }
@@ -159,8 +172,10 @@ public class Client implements Runnable {
             while (in.hasNextLine()) {
                 Message message = Message.fromString(in.nextLine());
 
-                message.decrypt(Cipher.ROT13);
-                message.decrypt(Cipher.REVERSE);
+                if(Conf.CRYPTO) {
+                    message.decrypt(Conf.CRYPTO_SECOND_LAYER);
+                    message.decrypt(Conf.CRYPTO_FIRST_LAYER);
+                }
 
                 if(Conf.LOG) log.println(message);
 
