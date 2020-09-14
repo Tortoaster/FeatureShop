@@ -55,15 +55,17 @@ public class Client implements Runnable {
                         JLabel portLabel = new JLabel("Port: ");
                         port = new JTextField("" + Server.PORT);
 
-                        JLabel passLabel = new JLabel("Password: ");
-                        pass = new JPasswordField();
-
                         fields.add(ipLabel);
                         fields.add(ip);
                         fields.add(portLabel);
                         fields.add(port);
-                        fields.add(passLabel);
-                        fields.add(pass);
+
+                        if(Conf.AUTH) {
+                            JLabel passLabel = new JLabel("Password: ");
+                            pass = new JPasswordField();
+                            fields.add(passLabel);
+                            fields.add(pass);
+                        }
                     }
 
                     JButton button = new JButton("Log in");
@@ -140,11 +142,18 @@ public class Client implements Runnable {
             e.printStackTrace();
         }
 
-        out.println(Server.CODE_LOGIN);
-        out.println(pass.getText());
+        boolean verified = false;
 
-        if (in.nextBoolean()) {
+        if(Conf.AUTH) {
+            out.println(Server.CODE_LOGIN);
+            out.println(pass.getText());
+            verified = in.nextBoolean();
             in.nextLine();
+        } else {
+            verified = true;
+        }
+
+        if (verified) {
             ((CardLayout) panel.getLayout()).next(panel);
 
             while (in.hasNextLine()) {

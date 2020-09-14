@@ -53,7 +53,7 @@ public class Server {
 
     private static class ServerClient implements Runnable {
 
-        private boolean verified;
+        private boolean verified = !Conf.AUTH;
 
         private final Socket socket;
         private final Server server;
@@ -106,13 +106,15 @@ public class Server {
                     case CODE_LOGIN:
                         String password = in.nextLine();
 
-                        if (password.equals(PASSWORD)) {
-                            verified = true;
-                            out.println(true);
-                        } else {
-                            if(Conf.LOG) server.log.println("Wrong password: " + password);
-                            out.println(false);
-                            break loop;
+                        if(Conf.AUTH) {
+                            if (password.equals(PASSWORD)) {
+                                verified = true;
+                                out.println(true);
+                            } else {
+                                if (Conf.LOG) server.log.println("Wrong password: " + password);
+                                out.println(false);
+                                break loop;
+                            }
                         }
 
                         break;
