@@ -13,11 +13,11 @@ public class Message implements Serializable {
     }
 
     public void encrypt(Cipher cipher) {
-        content = cipher.encrypt(content);
+        if(Conf.CRYPTO) content = cipher.encrypt(content);
     }
 
     public void decrypt(Cipher cipher) {
-        content = cipher.decrypt(content);
+        if(Conf.CRYPTO) content = cipher.decrypt(content);
     }
 
     @Override
