@@ -25,10 +25,12 @@ public class Server {
 
     public Server() {
         try {
-            log = new PrintWriter(new BufferedWriter(new FileWriter("logs/server/log.txt", true)), true);
-
             ServerSocket server = new ServerSocket(PORT);
-            log.println("Server started");
+
+            if(Conf.LOG) {
+                log = new PrintWriter(new BufferedWriter(new FileWriter("logs/server/log.txt", true)), true);
+                log.println("Server started");
+            }
 
             while (true) {
                 Socket socket = server.accept();
@@ -89,12 +91,12 @@ public class Server {
                 e.printStackTrace();
             }
 
-            server.log.println(socket.getRemoteSocketAddress() + " disconnected");
+            if(Conf.LOG) server.log.println(socket.getRemoteSocketAddress() + " disconnected");
         }
 
         @Override
         public void run() {
-            server.log.println(socket.getRemoteSocketAddress() + " connected");
+            if(Conf.LOG) server.log.println(socket.getRemoteSocketAddress() + " connected");
 
             loop:
             while (in.hasNextLine()) {
@@ -108,7 +110,7 @@ public class Server {
                             verified = true;
                             out.println(true);
                         } else {
-                            server.log.println("Wrong password: " + password);
+                            if(Conf.LOG) server.log.println("Wrong password: " + password);
                             out.println(false);
                             break loop;
                         }
@@ -123,7 +125,7 @@ public class Server {
                             message.decrypt(Cipher.REVERSE);
                             message.decrypt(Cipher.ROT13);
 
-                            server.log.println(message);
+                            if(Conf.LOG) server.log.println(message);
 
                             message.encrypt(Cipher.ROT13);
                             message.encrypt(Cipher.REVERSE);

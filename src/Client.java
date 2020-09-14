@@ -27,10 +27,12 @@ public class Client implements Runnable {
     }
 
     public Client() {
-        try {
-            log = new PrintWriter(new BufferedWriter(new FileWriter("logs/client/log.txt", true)), true);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(Conf.LOG) {
+            try {
+                log = new PrintWriter(new BufferedWriter(new FileWriter("logs/client/log.txt", true)), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         createUI();
@@ -151,7 +153,7 @@ public class Client implements Runnable {
                 message.decrypt(Cipher.ROT13);
                 message.decrypt(Cipher.REVERSE);
 
-                log.println(message);
+                if(Conf.LOG) log.println(message);
 
                 JLabel label = new JLabel(message.getSender() + " " + message.getContent());
                 label.setForeground(message.getColor());
