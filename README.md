@@ -22,7 +22,7 @@ our opinion.
 
 ### Feature selection
 
-The user should adapt the `Conf.java` file to specify their requirements. It has four
+The user should adapt the `com.toinerick.spl.Conf.java` file to specify their requirements. It has four
 major features (`COLOR` for colored texts, `CRYPTO` for encrypted messages, `AUTH` for
 password authentication and `LOG` for message logging), along with feature-specific
 options (such as default color, which crypto to use, what password and where to place
@@ -50,4 +50,4 @@ so instead we had to force the programmer to only ever create one instance of th
 strategy and save that globally. Since the singleton pattern is ugly, we created an
 enumeration with abstract functions for encrypt and decrypt instead. While this doesn't
 look like the traditional Java strategy pattern, it's still some abstract type
-(`Cipher`) with concrete implementations (`ROT13`, `REVERSE`), so we think it counts.
+(`com.toinerick.spl.Cipher`) with concrete implementations (`ROT13`, `REVERSE`), so we think it counts.

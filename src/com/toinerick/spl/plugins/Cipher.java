@@ -1,3 +1,5 @@
+package com.toinerick.spl.plugins;
+
 public enum Cipher {
     REVERSE() {
         @Override

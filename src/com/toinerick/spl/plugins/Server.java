@@ -1,5 +1,5 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+package com.toinerick.spl.plugins;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -13,9 +13,22 @@ public class Server {
     public static final byte CODE_LOGIN = 1, CODE_MESSAGE = 2;
     public static final int PORT = 7777;
 
-    private final List<ServerClient> clients = new ArrayList<>();
+    //#if Crypto
+    public static final Cipher CRYPTO_FIRST_LAYER = Cipher.ROT13;
+    public static final Cipher CRYPTO_SECOND_LAYER = Cipher.REVERSE;
+    //#endif
 
-    private PrintWriter log;
+    //#if Auth
+//@	private static final String AUTH_PASS = "12345";
+    //#endif
+
+    //#if Log
+//@private static final String LOG_PATH = "logs/server/log.txt";
+//@
+//@private PrintWriter log;_
+    //#endif
+
+    private final List<ServerClient> clients = new ArrayList<>();
 
     public static void main(String[] args) {
         new Server();
@@ -25,10 +38,10 @@ public class Server {
         try {
             ServerSocket server = new ServerSocket(PORT);
 
-            if(Conf.LOG) {
-                log = new PrintWriter(new BufferedWriter(new FileWriter(Conf.LOG_SERVER_PATH, true)), true);
-                log.println("Server started");
-            }
+            //#if Log
+//@            log = new PrintWriter(new BufferedWriter(new FileWriter(LOG_PATH, true)), true);
+//@            log.println("Server started");
+            //#endif
 
             while (true) {
                 Socket socket = server.accept();
@@ -51,7 +64,7 @@ public class Server {
 
     private static class ServerClient implements Runnable {
 
-        private boolean verified = !Conf.AUTH;
+        private boolean verified = true;
 
         private final Socket socket;
         private final Server server;
@@ -62,6 +75,10 @@ public class Server {
         public ServerClient(Socket socket, Server server) {
             this.socket = socket;
             this.server = server;
+
+            //#if Auth
+//@            verified = false;
+            //#endif
 
             try {
                 in = new Scanner(socket.getInputStream());
@@ -89,12 +106,16 @@ public class Server {
                 e.printStackTrace();
             }
 
-            if(Conf.LOG) server.log.println(socket.getRemoteSocketAddress() + " disconnected");
+            //#if Log
+//@            server.log.println(socket.getRemoteSocketAddress() + " disconnected");
+            //#endif
         }
 
         @Override
         public void run() {
-            if(Conf.LOG) server.log.println(socket.getRemoteSocketAddress() + " connected");
+            //#if Log
+//@        	server.log.println(socket.getRemoteSocketAddress() + " connected");
+            //#endif
 
             loop:
             while (in.hasNextLine()) {
@@ -104,35 +125,40 @@ public class Server {
                     case CODE_LOGIN:
                         String password = in.nextLine();
 
-                        if(Conf.AUTH) {
-                            if (password.equals(Conf.AUTH_PASS)) {
-                                verified = true;
-                                out.println(true);
-                            } else {
-                                if (Conf.LOG) server.log.println("Wrong password: " + password);
-                                out.println(false);
-                                break loop;
-                            }
-                        }
+                        //#if Auth
+//@                        if (password.equals(AUTH_PASS)) {
+//@                        	verified = true;
+//@                        	out.println(true);
+//@                        } else {
+                        //#if Log
+//@                        	server.log.println("Wrong password: " + password);
+                        //#endif
+//@                        	out.println(false);
+//@	                        break loop;
+//@                        }
+                        //#endif
 
                         break;
                     case CODE_MESSAGE:
                         Message message = Message.fromString(in.nextLine());
 
-                        message.setSender(socket.getRemoteSocketAddress().toString());
-
                         if (verified) {
-                            if(Conf.CRYPTO) {
-                                message.decrypt(Conf.CRYPTO_SECOND_LAYER);
-                                message.decrypt(Conf.CRYPTO_FIRST_LAYER);
-                            }
+                            message.setSender(socket.getRemoteSocketAddress().toString());
 
-                            if(Conf.LOG) server.log.println(message);
-
-                            if(Conf.CRYPTO) {
-                                message.encrypt(Conf.CRYPTO_FIRST_LAYER);
-                                message.encrypt(Conf.CRYPTO_SECOND_LAYER);
-                            }
+                            //#if Log
+//@                            //#if Crypto
+//@                            message.decrypt(CRYPTO_SECOND_LAYER);
+//@                            message.decrypt(CRYPTO_FIRST_LAYER);
+//@                            //#endif
+//@
+//@
+//@                            server.log.println(message);
+//@
+//@                            //#if Crypto
+//@                            message.encrypt(CRYPTO_FIRST_LAYER);
+//@                            message.encrypt(CRYPTO_SECOND_LAYER);
+//@                            //#endif
+                            //#endif
 
                             server.forward(message);
                         }
