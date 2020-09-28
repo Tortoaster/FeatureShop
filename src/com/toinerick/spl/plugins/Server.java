@@ -1,6 +1,8 @@
 package com.toinerick.spl.plugins;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -56,7 +58,7 @@ public class Server {
         }
     }
 
-    public void forward(Message message) {
+    public void forward(Message message) throws IOException {
         for (ServerClient c : clients) {
             c.send(message);
         }
@@ -69,8 +71,8 @@ public class Server {
         private final Socket socket;
         private final Server server;
 
-        private PrintWriter out;
-        private Scanner in;
+        private ObjectOutputStream out;
+        private ObjectInputStream in;
 
         public ServerClient(Socket socket, Server server) {
             this.socket = socket;
@@ -81,8 +83,8 @@ public class Server {
             //#endif
 
             try {
-                in = new Scanner(socket.getInputStream());
-                out = new PrintWriter(socket.getOutputStream(), true);
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,17 +92,16 @@ public class Server {
             new Thread(this).start();
         }
 
-        public void send(Message message) {
-            out.println(message);
+        public void send(Message message) throws IOException {
+            out.writeObject(message);
         }
 
         public void close() {
             server.clients.remove(this);
 
-            in.close();
-            out.close();
-
             try {
+                in.close();
+                out.close();
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -118,12 +119,25 @@ public class Server {
             //#endif
 
             loop:
-            while (in.hasNextLine()) {
-                byte code = in.nextByte();
-                in.nextLine();
+            while (true) {
+                byte code;
+
+                try {
+                    code = in.readByte();
+                } catch (IOException e) {
+                    break;
+                }
+
                 switch (code) {
                     case CODE_LOGIN:
-                        String password = in.nextLine();
+                        String password;
+
+                        try {
+                            password = (String) in.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                            break loop;
+                        }
 
                         //#if Auth
 //@                        if (password.equals(AUTH_PASS)) {
@@ -140,7 +154,14 @@ public class Server {
 
                         break;
                     case CODE_MESSAGE:
-                        Message message = Message.fromString(in.nextLine());
+                        Message message;
+
+                        try {
+                            message = (Message) in.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                            break loop;
+                        }
 
                         if (verified) {
                             message.setSender(socket.getRemoteSocketAddress().toString());
@@ -160,7 +181,11 @@ public class Server {
 //@                            //#endif
                             //#endif
 
-                            server.forward(message);
+                            try {
+                                server.forward(message);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         break;

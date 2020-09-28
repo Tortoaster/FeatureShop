@@ -7,8 +7,11 @@ import com.toinerick.spl.plugins.ui.UI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client implements Runnable {
@@ -19,7 +22,7 @@ public class Client implements Runnable {
 //@    private PrintWriter log;
     //#endif
 
-    private PrintWriter out;
+    private ObjectOutputStream out;
 
     private final UI ui;
 
@@ -46,16 +49,20 @@ public class Client implements Runnable {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        out.println(Server.CODE_MESSAGE);
-
-                        Message message = new Message(ui.getMessage());
+                        Message message = new Message(ui.getMessage(), new ArrayList<>());
 
                         //#if Crypto
                         message.encrypt(Server.CRYPTO_FIRST_LAYER);
                         message.encrypt(Server.CRYPTO_SECOND_LAYER);
                         //#endif
 
-                        out.println(message);
+                        try {
+                            out.writeByte(Server.CODE_MESSAGE);
+                            out.writeObject(message);
+                            out.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -69,11 +76,12 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        Scanner in;
+        ObjectInputStream in;
+
         try {
             Socket socket = new Socket(ui.getIP(), ui.getPort());
-            in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream(), true);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -82,9 +90,10 @@ public class Client implements Runnable {
         boolean verified;
 
         //#if Auth
-//@        out.println(Server.CODE_LOGIN);
-//@        out.println(ui.getPassword());
-//@        verified = in.nextBoolean();
+//@        out.writeByte(Server.CODE_LOGIN);
+//@        out.writeObject(ui.getPassword());
+//@        out.flush();
+//@        verified = in.readBoolean();
 //@        in.nextLine();
         //#else
         verified = true;
@@ -93,8 +102,15 @@ public class Client implements Runnable {
         if (verified) {
             ui.onLogin(true);
 
-            while (in.hasNextLine()) {
-                Message message = Message.fromString(in.nextLine());
+            while (true) {
+                Message message;
+
+                try {
+                    message = (Message) in.readObject();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                    continue;
+                }
 
                 //#if Crypto
                 message.decrypt(Server.CRYPTO_SECOND_LAYER);
@@ -111,7 +127,11 @@ public class Client implements Runnable {
             ui.onLogin(false);
         }
 
-        in.close();
-        out.close();
+        try {
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
