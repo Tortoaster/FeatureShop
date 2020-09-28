@@ -24,7 +24,7 @@ public class Client implements Runnable {
     private final UI ui;
 
     public static void main(String[] args) {
-        new Client();
+        Client client = new Client();
     }
 
     public Client() {
@@ -36,35 +36,35 @@ public class Client implements Runnable {
 //@        }
         //#endif
 
-//        ui = new GUI(
-//                new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent actionEvent) {
-//                        new Thread(Client.this).start();
-//                    }
-//                },
-//                new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent actionEvent) {
-//                        out.println(Server.CODE_MESSAGE);
-//
-//                        Message message = new Message(ui.getMessage());
-//
-//                        //#if Crypto
-//                        message.encrypt(Server.CRYPTO_FIRST_LAYER);
-//                        message.encrypt(Server.CRYPTO_SECOND_LAYER);
-//                        //#endif
-//
-//                        out.println(message);
-//                    }
-//                });
+        ui = new GUI(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        new Thread(Client.this).start();
+                    }
+                },
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        out.println(Server.CODE_MESSAGE);
 
-        ui = new TUI(new TUI.OnStartListener() {
-            @Override
-            public void onStart() {
-                new Thread(Client.this).start();
-            }
-        });
+                        Message message = new Message(ui.getMessage());
+
+                        //#if Crypto
+                        message.encrypt(Server.CRYPTO_FIRST_LAYER);
+                        message.encrypt(Server.CRYPTO_SECOND_LAYER);
+                        //#endif
+
+                        out.println(message);
+                    }
+                });
+
+//        ui = new TUI(new TUI.OnStartListener() {
+//            @Override
+//            public void onStart() {
+//                new Thread(Client.this).start();
+//            }
+//        });
     }
 
     @Override
