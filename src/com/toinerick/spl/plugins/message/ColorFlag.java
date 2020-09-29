@@ -9,4 +9,14 @@ public class ColorFlag implements MessageFlag {
     public ColorFlag(Color color) {
         this.color = color;
     }
+
+    @Override
+    public String preprocess(String message) {
+        return null;
+    }
+
+    @Override
+    public String postprocess(String message) {
+        return null;
+    }
 }

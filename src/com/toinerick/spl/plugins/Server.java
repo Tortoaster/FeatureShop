@@ -3,22 +3,18 @@ package com.toinerick.spl.plugins;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Server {
 
     public static final byte CODE_LOGIN = 1, CODE_MESSAGE = 2;
     public static final int PORT = 7777;
 
-    //#if Crypto
     public static final Cipher CRYPTO_FIRST_LAYER = Cipher.ROT13;
     public static final Cipher CRYPTO_SECOND_LAYER = Cipher.REVERSE;
-    //#endif
 
     //#if Auth
 //@	private static final String AUTH_PASS = "12345";
@@ -167,18 +163,7 @@ public class Server {
                             message.setSender(socket.getRemoteSocketAddress().toString());
 
                             //#if Log
-//@                            //#if Crypto
-//@                            message.decrypt(CRYPTO_SECOND_LAYER);
-//@                            message.decrypt(CRYPTO_FIRST_LAYER);
-//@                            //#endif
-//@
-//@
 //@                            server.log.println(message);
-//@
-//@                            //#if Crypto
-//@                            message.encrypt(CRYPTO_FIRST_LAYER);
-//@                            message.encrypt(CRYPTO_SECOND_LAYER);
-//@                            //#endif
                             //#endif
 
                             try {

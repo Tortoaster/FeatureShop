@@ -1,5 +1,7 @@
 package com.toinerick.spl.plugins;
 
+import com.toinerick.spl.plugins.message.CipherFlag;
+import com.toinerick.spl.plugins.message.MessageFlag;
 import com.toinerick.spl.plugins.ui.GUI;
 import com.toinerick.spl.plugins.ui.TUI;
 import com.toinerick.spl.plugins.ui.UI;
@@ -12,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Client implements Runnable {
@@ -26,11 +29,16 @@ public class Client implements Runnable {
 
     private final UI ui;
 
+    private final List<MessageFlag> defaultFlags = new ArrayList<>();
+
     public static void main(String[] args) {
-        Client client = new Client();
+        new Client();
     }
 
     public Client() {
+        defaultFlags.add(new CipherFlag(Server.CRYPTO_FIRST_LAYER));
+        defaultFlags.add(new CipherFlag(Server.CRYPTO_SECOND_LAYER));
+
         //#if Log
 //@        try {
 //@            log = new PrintWriter(new BufferedWriter(new FileWriter(LOG_PATH, true)), true);
@@ -49,12 +57,7 @@ public class Client implements Runnable {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        Message message = new Message(ui.getMessage(), new ArrayList<>());
-
-                        //#if Crypto
-                        message.encrypt(Server.CRYPTO_FIRST_LAYER);
-                        message.encrypt(Server.CRYPTO_SECOND_LAYER);
-                        //#endif
+                        Message message = new Message(ui.getMessage(), defaultFlags);
 
                         try {
                             out.writeByte(Server.CODE_MESSAGE);
@@ -111,11 +114,6 @@ public class Client implements Runnable {
                     e.printStackTrace();
                     continue;
                 }
-
-                //#if Crypto
-                message.decrypt(Server.CRYPTO_SECOND_LAYER);
-                message.decrypt(Server.CRYPTO_FIRST_LAYER);
-                //#endif
 
                 //#if Log
 //@                log.println(message);

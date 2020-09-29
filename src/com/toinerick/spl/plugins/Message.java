@@ -13,29 +13,28 @@ public class Message implements Serializable {
     private final List<MessageFlag> flags;
 
     public Message(String content, List<MessageFlag> flags) {
-        this.content = content;
         this.flags = flags;
-    }
 
-    public void encrypt(Cipher cipher) {
-        //#if Crypto
-        content = cipher.encrypt(content);
-        //#endif
-    }
+        for(MessageFlag f: flags) {
+            content = f.preprocess(content);
+        }
 
-    public void decrypt(Cipher cipher) {
-        //#if Crypto
-        content = cipher.decrypt(content);
-        //#endif
-    }
-
-    void addFlag(MessageFlag flag) {
-        flags.add(flag);
+        this.content = content;
     }
 
     @Override
     public String toString() {
-        return sender + ": " + content;
+        String processed = content;
+
+        for(int i = flags.size() - 1; i >= 0; i--) {
+            processed = flags.get(i).postprocess(processed);
+        }
+
+        return sender + ": " + processed;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getContent() {

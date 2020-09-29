@@ -3,18 +3,18 @@ package com.toinerick.spl.plugins;
 public enum Cipher {
     REVERSE() {
         @Override
-        String encrypt(String plainText) {
+        public String encrypt(String plainText) {
             return new StringBuilder(plainText).reverse().toString();
         }
 
         @Override
-        String decrypt(String cipherText) {
+        public String decrypt(String cipherText) {
             return encrypt(cipherText);
         }
     },
     ROT13() {
         @Override
-        String encrypt(String plainText) {
+        public String encrypt(String plainText) {
             StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < plainText.length(); i++) {
@@ -32,11 +32,11 @@ public enum Cipher {
         }
 
         @Override
-        String decrypt(String cipherText) {
+        public String decrypt(String cipherText) {
             return encrypt(cipherText);
         }
     };
 
-    abstract String encrypt(String plainText);
-    abstract String decrypt(String cipherText);
+    public abstract String encrypt(String plainText);
+    public abstract String decrypt(String cipherText);
 }

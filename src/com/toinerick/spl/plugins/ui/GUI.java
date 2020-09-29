@@ -154,7 +154,7 @@ public class GUI implements UI {
 
     @Override
     public void onReceiveMessage(Message message) {
-        JLabel label = new JLabel(message.getSender() + " " + message.getContent());
+        JLabel label = new JLabel(message.toString());
         label.setForeground(Color.MAGENTA);
         messages.add(label);
         messages.validate();
