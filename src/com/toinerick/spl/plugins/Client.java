@@ -1,23 +1,24 @@
 package com.toinerick.spl.plugins;
 
 import com.toinerick.spl.plugins.message.CipherFlag;
+import com.toinerick.spl.plugins.message.ColorFlag;
 import com.toinerick.spl.plugins.message.MessageFlag;
 import com.toinerick.spl.plugins.ui.GUI;
-import com.toinerick.spl.plugins.ui.TUI;
 import com.toinerick.spl.plugins.ui.UI;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Client implements Runnable {
+
+    public static final Color COLOR_DEFAULT = Color.BLACK;
 
     //#if Log
 //@    private static final String LOG_PATH = "logs/client/log.txt";
@@ -36,8 +37,19 @@ public class Client implements Runnable {
     }
 
     public Client() {
+        // You can choose which plugins to enable here. Currently, two layers of encryption are used, along with colors.
+        // Simply add or remove message flags to your needs; you can add any number of encryption layers, and optionally
+        // a color flag. The GUI plugin has an optional dependency on the color plugin, which can be triggered by
+        // passing the color flag from the default flags. In this case, the GUI will add a color picker button and color
+        // the messages for you. The TUI plugin doesn't make use of colors. Exactly one of the TUI and GUI plugins must
+        // be active.
+
         defaultFlags.add(new CipherFlag(Server.CRYPTO_FIRST_LAYER));
         defaultFlags.add(new CipherFlag(Server.CRYPTO_SECOND_LAYER));
+
+        ColorFlag color = new ColorFlag(COLOR_DEFAULT);
+
+        defaultFlags.add(color);
 
         //#if Log
 //@        try {
@@ -67,7 +79,9 @@ public class Client implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                });
+                },
+                color
+        );
 
 //        ui = new TUI(new TUI.OnStartListener() {
 //            @Override

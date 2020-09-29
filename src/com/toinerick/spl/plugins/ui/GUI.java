@@ -1,8 +1,11 @@
 package com.toinerick.spl.plugins.ui;
 
+import com.toinerick.spl.plugins.Client;
 import com.toinerick.spl.plugins.JColorButton;
 import com.toinerick.spl.plugins.Message;
 import com.toinerick.spl.plugins.Server;
+import com.toinerick.spl.plugins.message.ColorFlag;
+import com.toinerick.spl.plugins.message.MessageFlag;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +14,6 @@ import java.awt.event.ActionListener;
 public class GUI implements UI {
 
     private static final int WIDTH = 500, HEIGHT = 500, SIZE = 30;
-
-    private static final Color COLOR_DEFAULT = Color.BLACK;
 
     private final JTextField ip;
     private final JTextField port;
@@ -24,7 +25,11 @@ public class GUI implements UI {
     private final JFrame login = new JFrame();
     private final JFrame chat = new JFrame();
 
-    public GUI(ActionListener loginListener, ActionListener sendListener) {
+    private final ColorFlag colorFlag;
+
+    public GUI(ActionListener loginListener, ActionListener sendListener, ColorFlag colorFlag) {
+        this.colorFlag = colorFlag;
+
         {
             JPanel panel = new JPanel();
             {
@@ -82,7 +87,12 @@ public class GUI implements UI {
 
                 JPanel input = new JPanel();
                 {
-                    JColorButton color = new JColorButton(COLOR_DEFAULT);
+                    JColorButton color = new JColorButton(Client.COLOR_DEFAULT, new JColorButton.OnColorChangeListener() {
+                        @Override
+                        public void colorChanged(Color color) {
+                            colorFlag.setColor(color);
+                        }
+                    });
                     color.setPreferredSize(new Dimension(SIZE, SIZE));
 
                     JButton send = new JButton("Send");
@@ -92,17 +102,14 @@ public class GUI implements UI {
                     text.setToolTipText("Say something...");
                     int width = WIDTH - send.getPreferredSize().width;
 
-                    //#if Color
-                    width -= color.getPreferredSize().width;
-                    //#endif
+                    if(colorFlag != null) {
+                        width -= color.getPreferredSize().width;
+                        input.add(color);
+                    }
 
                     text.setPreferredSize(new Dimension(width, SIZE));
 
                     send.addActionListener(sendListener);
-
-                    //#if Color
-                    input.add(color);
-                    //#endif
 
                     input.add(text);
                     input.add(send);
@@ -155,7 +162,16 @@ public class GUI implements UI {
     @Override
     public void onReceiveMessage(Message message) {
         JLabel label = new JLabel(message.toString());
-        label.setForeground(Color.MAGENTA);
+
+        if(colorFlag != null) {
+            for(MessageFlag f: message.getFlags()) {
+                if(f instanceof ColorFlag) {
+                    label.setForeground(((ColorFlag) f).getColor());
+                    break;
+                }
+            }
+        }
+
         messages.add(label);
         messages.validate();
         messages.repaint();

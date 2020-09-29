@@ -10,13 +10,21 @@ public class JColorButton extends JButton {
 
     private Color color;
 
-    public JColorButton(Color c) {
+    private OnColorChangeListener listener;
+
+    public interface OnColorChangeListener {
+        void colorChanged(Color color);
+    }
+
+    public JColorButton(Color c, OnColorChangeListener listener) {
+        this.listener = listener;
         setSelectedColor(c);
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 Color newColor = JColorChooser.showDialog(null, "Pick a color", color);
                 setSelectedColor(newColor);
+                listener.colorChanged(color);
             }
         });
     }
@@ -34,9 +42,5 @@ public class JColorButton extends JButton {
         this.color = color;
         setIcon(createIcon(this.color, Math.max(getWidth(), 100), Math.max(getHeight(), 100)));
         repaint();
-    }
-
-    public Color getSelectedColor() {
-        return color;
     }
 }

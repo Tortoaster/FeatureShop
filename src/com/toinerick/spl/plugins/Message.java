@@ -8,7 +8,7 @@ import java.util.List;
 public class Message implements Serializable {
 
     private String sender;
-    private String content;
+    private final String content;
 
     private final List<MessageFlag> flags;
 
@@ -33,8 +33,8 @@ public class Message implements Serializable {
         return sender + ": " + processed;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getContent() {
@@ -45,7 +45,7 @@ public class Message implements Serializable {
         return sender;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public List<MessageFlag> getFlags() {
+        return flags;
     }
 }

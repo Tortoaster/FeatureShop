@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class ColorFlag implements MessageFlag {
 
-    private final Color color;
+    private Color color;
 
     public ColorFlag(Color color) {
         this.color = color;
@@ -12,11 +12,19 @@ public class ColorFlag implements MessageFlag {
 
     @Override
     public String preprocess(String message) {
-        return null;
+        return message;
     }
 
     @Override
     public String postprocess(String message) {
-        return null;
+        return message;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }
