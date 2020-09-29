@@ -44,6 +44,9 @@ public class Client implements Runnable {
         // the messages for you. The TUI plugin doesn't make use of colors. Exactly one of the TUI and GUI plugins must
         // be active.
 
+        // Please excuse leftover Antenna comments. As a group of two we were allowed to skip implementing Log and Auth
+        // as plugins, so we left these as they were last week.
+
         defaultFlags.add(new CipherFlag(Server.CRYPTO_FIRST_LAYER));
         defaultFlags.add(new CipherFlag(Server.CRYPTO_SECOND_LAYER));
 
