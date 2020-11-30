@@ -3,32 +3,21 @@ package com.trick.featureship;
 import com.trick.featureship.plugins.Plugin;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+import java.awt.event.KeyEvent;
 
 public class Menubar extends JMenuBar {
 
     public Menubar(Plugin[] plugins, FeatureShop shop) {
-        for (Plugin p: plugins) {
-            JMenu menu = new JMenu(p.getName());
-            menu.addMenuListener(new MenuListener() {
-                @Override
-                public void menuSelected(MenuEvent e) {
-                    p.buttonPressed(e, shop, menu);
-                }
+        JMenu menu = new JMenu("Plugins");
 
-                @Override
-                public void menuDeselected(MenuEvent e) {
-
-                }
-
-                @Override
-                public void menuCanceled(MenuEvent e) {
-
-                }
-            });
-            add(menu);
+        for (Plugin p : plugins) {
+            JMenuItem menuItem = new JMenuItem(p.getName());
+            menuItem.addActionListener(e -> p.buttonPressed(e, shop));
+            menuItem.setMnemonic(KeyEvent.VK_S);
+            menu.add(menuItem);
         }
+
+        add(menu);
     }
 
 }

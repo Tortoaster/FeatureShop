@@ -5,8 +5,8 @@ import com.trick.featureship.FeatureShop;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,12 @@ public class Save implements Plugin {
     }
 
     @Override
-    public void buttonPressed(MenuEvent event, FeatureShop shop, JMenu menu) {
+    public char shortcut() {
+        return 'S';
+    }
+
+    @Override
+    public void buttonPressed(ActionEvent event, FeatureShop shop) {
         Canvas canvas = shop.getCanvas();
 
         JFileChooser fileChooser = new JFileChooser();
@@ -81,8 +86,6 @@ public class Save implements Plugin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            menu.setSelected(false);
         }
 
     }
