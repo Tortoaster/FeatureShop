@@ -3,7 +3,6 @@ package com.trick.featureshop;
 import com.trick.featureshop.plugins.Plugin;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 
 public class Menubar extends JMenuBar {
 
@@ -13,7 +12,7 @@ public class Menubar extends JMenuBar {
         for (Plugin p : plugins) {
             JMenuItem menuItem = new JMenuItem(p.getName());
             menuItem.addActionListener(e -> p.buttonPressed(e, shop));
-            menuItem.setMnemonic(KeyEvent.VK_S);
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(p.shortcut()));
             menu.add(menuItem);
         }
 

@@ -44,7 +44,7 @@ public class ColorPicker implements Action {
         return new ImageIcon(image);
     }
 
-    private void setColor(Color color) {
+    public void setColor(Color color) {
         this.color = color;
         button.setIcon(createIcon(color, SIZE, SIZE));
         button.repaint();

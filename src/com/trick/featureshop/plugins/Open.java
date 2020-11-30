@@ -11,22 +11,20 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Save implements Plugin {
+public class Open implements Plugin {
 
     @Override
-    public String getName() {
-        return "Save";
-    }
+    public String getName() { return "Open"; }
 
     @Override
-    public String shortcut() { return "control S"; }
+    public String shortcut() { return "control O"; }
 
     @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
         Canvas canvas = shop.getCanvas();
 
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Specify a file to save");
+        fileChooser.setDialogTitle("Select an image to open.");
         fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
             public boolean accept(File f) {
@@ -60,32 +58,33 @@ public class Save implements Plugin {
             }
         });
 
-        int userSelection = fileChooser.showSaveDialog(shop.getFrame());
+        int userSelection = fileChooser.showOpenDialog(shop.getFrame());
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-
-            BufferedImage image = new BufferedImage(canvas.getCanvasWidth(), canvas.getCanvasHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.getGraphics();
-            Color[][] pixels = canvas.getPixels();
-
-            for(int y = 0; y < canvas.getCanvasHeight(); y++) {
-                for(int x = 0; x < canvas.getCanvasWidth(); x++) {
-                    g.setColor(pixels[x][y]);
-                    g.drawLine(x, y, x, y);
-                }
-            }
-
-            System.out.println(image.toString());
+            File fileToOpen = fileChooser.getSelectedFile();
+            System.out.println("Open file: " + fileToOpen.getAbsolutePath());
 
             try {
-                ImageIO.write(image, fileToSave.getName().endsWith("png") ? "png" : "jpg", fileToSave);
+                BufferedImage image = ImageIO.read(fileToOpen);
+
+                Color[][] pixels = new Color[image.getWidth()][image.getHeight()];
+
+                for(int y = 0; y < image.getHeight(); y++) {
+                    for(int x = 0; x < image.getWidth(); x++) {
+                        pixels[x][y] = new Color(image.getRGB(x, y));
+                    }
+                }
+
+                canvas.setCanvasWidth(image.getWidth());
+                canvas.setCanvasHeight(image.getHeight());
+                canvas.setPixels(pixels);
+                canvas.repaint();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
 
+        }
     }
 
 }

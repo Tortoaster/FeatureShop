@@ -5,11 +5,15 @@ import java.awt.*;
 
 public class Canvas extends JPanel {
 
+    public interface ColorCondition {
+        boolean accept(Color color);
+    }
+
     public static final int MAX_ZOOM = 50;
 
     private static final Color BACKGROUND = Color.DARK_GRAY;
 
-    private final int canvasWidth, canvasHeight;
+    private int canvasWidth, canvasHeight;
 
     private int panX = 0, panY = 0;
 
@@ -18,7 +22,7 @@ public class Canvas extends JPanel {
 
     private float scale = 1;
 
-    private final Color[][] pixels;
+    private Color[][] pixels;
 
     public Canvas(int canvasWidth, int canvasHeight) throws IllegalArgumentException {
         if (canvasWidth <= 0 || canvasHeight <= 0) throw new IllegalArgumentException("width and height must be greater than 0");
@@ -32,6 +36,13 @@ public class Canvas extends JPanel {
                 pixels[x][y] = Color.WHITE;
             }
         }
+    }
+
+    public Canvas(Color[][] pixels) {
+        this.pixels = pixels;
+
+        canvasWidth = pixels.length;
+        canvasHeight = pixels[0].length;
     }
 
     public void point(int x, int y, int radius, Color color) {
@@ -106,6 +117,24 @@ public class Canvas extends JPanel {
         }
     }
 
+    public void spread(int x, int y, Color color, ColorCondition condition) {
+        if(x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(pixels[x][y])) {
+            pixels[x][y] = color;
+            spread(x, y - 1, color, condition);
+            spread(x + 1, y, color, condition);
+            spread(x, y + 1, color, condition);
+            spread(x - 1, y, color, condition);
+        }
+    }
+
+    public Color eyeDrop(int x, int y) {
+        if(x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
+            return pixels[x][y];
+        } else {
+            return Color.BLACK;
+        }
+    }
+
     public int screenToCanvasX(int x) {
         return (int) ((x - left) / scale);
     }
@@ -136,6 +165,18 @@ public class Canvas extends JPanel {
 
         g.setColor(BACKGROUND);
         g.drawRect(left - 1, top - 1, (int) imageWidth + 1, (int) imageHeight + 1);
+    }
+
+    public void setPixels(Color[][] pixels) {
+        this.pixels = pixels;
+    }
+
+    public void setCanvasHeight(int canvasHeight) {
+        this.canvasHeight = canvasHeight;
+    }
+
+    public void setCanvasWidth(int canvasWidth) {
+        this.canvasWidth = canvasWidth;
     }
 
     public void setPanX(int panX) {
