@@ -10,6 +10,7 @@ import com.trick.featureshop.tools.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class FeatureShop implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -18,9 +19,11 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
 
     private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR)};
 
-    private static final Plugin[] PLUGINS = new Plugin[]{new Save(), new Open()};
+    private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open()};
 
-    private final Canvas canvas = new Canvas(128, 128);
+    private final ArrayList<Canvas> canvases = new ArrayList<>();
+
+    private final JTabbedPane canvasPanes = new JTabbedPane();
 
     private final JFrame frame = new JFrame("FeatureShop");
 
@@ -47,75 +50,111 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
         toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
         toolbar.setBackground(Color.lightGray);
 
-        frame.add(canvas, BorderLayout.CENTER);
+        frame.add(canvasPanes, BorderLayout.CENTER);
         frame.add(toolbar, BorderLayout.LINE_END);
         frame.setJMenuBar(new Menubar(PLUGINS, this));
 
         frame.pack();
         frame.setVisible(true);
+    }
 
+    public void addCanvas(Canvas canvas) {
         canvas.addKeyListener(this);
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
         canvas.addMouseWheelListener(this);
+
+        canvases.add(canvas);
+        canvasPanes.addTab("Untitled", canvas);
     }
 
-    public JFrame getFrame() { return frame; }
-
-    public Canvas getCanvas() { return canvas; }
+    public Canvas getCanvas() {
+        int index = canvasPanes.getSelectedIndex();
+        if(index > -1) {
+            return canvases.get(index);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        toolbar.getActiveTool().keyTyped(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().keyTyped(e, getCanvas());
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        toolbar.getActiveTool().keyPressed(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().keyPressed(e, getCanvas());
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        toolbar.getActiveTool().keyReleased(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().keyReleased(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        toolbar.getActiveTool().mouseClicked(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseClicked(e, getCanvas());
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        toolbar.getActiveTool().mousePressed(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mousePressed(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        toolbar.getActiveTool().mouseReleased(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseReleased(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        toolbar.getActiveTool().mouseEntered(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseEntered(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        toolbar.getActiveTool().mouseExited(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseExited(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        toolbar.getActiveTool().mouseDragged(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseDragged(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        toolbar.getActiveTool().mouseMoved(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseMoved(e, getCanvas());
+        }
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        toolbar.getActiveTool().mouseWheelMoved(e, canvas);
+        if(getCanvas() != null) {
+            toolbar.getActiveTool().mouseWheelMoved(e, getCanvas());
+        }
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }

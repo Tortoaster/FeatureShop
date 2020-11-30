@@ -21,8 +21,6 @@ public class Open implements Plugin {
 
     @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
-        Canvas canvas = shop.getCanvas();
-
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select an image to open.");
         fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
@@ -75,10 +73,7 @@ public class Open implements Plugin {
                     }
                 }
 
-                canvas.setCanvasWidth(image.getWidth());
-                canvas.setCanvasHeight(image.getHeight());
-                canvas.setPixels(pixels);
-                canvas.repaint();
+                shop.addCanvas(new Canvas(pixels));
 
             } catch (IOException e) {
                 e.printStackTrace();

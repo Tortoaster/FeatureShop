@@ -13,7 +13,7 @@ public class Canvas extends JPanel {
 
     private static final Color BACKGROUND = Color.DARK_GRAY;
 
-    private int canvasWidth, canvasHeight;
+    private final int canvasWidth, canvasHeight;
 
     private int panX = 0, panY = 0;
 
@@ -22,10 +22,11 @@ public class Canvas extends JPanel {
 
     private float scale = 1;
 
-    private Color[][] pixels;
+    private final Color[][] pixels;
 
     public Canvas(int canvasWidth, int canvasHeight) throws IllegalArgumentException {
-        if (canvasWidth <= 0 || canvasHeight <= 0) throw new IllegalArgumentException("width and height must be greater than 0");
+        if (canvasWidth <= 0 || canvasHeight <= 0)
+            throw new IllegalArgumentException("width and height must be greater than 0");
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
 
@@ -46,12 +47,12 @@ public class Canvas extends JPanel {
     }
 
     public void point(int x, int y, int radius, Color color) {
-        for(int dY = -radius; dY < radius; dY++) {
+        for (int dY = -radius; dY < radius; dY++) {
             for (int dX = -radius; dX < radius; dX++) {
-                if(dX * dX + dY * dY < radius * radius) {
+                if (dX * dX + dY * dY < radius * radius) {
                     int fX = x + dX;
                     int fY = y + dY;
-                    if(fX >= 0 && fX < canvasWidth && fY >= 0 && fY < canvasHeight) {
+                    if (fX >= 0 && fX < canvasWidth && fY >= 0 && fY < canvasHeight) {
                         pixels[fX][fY] = color;
                     }
                 }
@@ -118,7 +119,7 @@ public class Canvas extends JPanel {
     }
 
     public void spread(int x, int y, Color color, ColorCondition condition) {
-        if(x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(pixels[x][y])) {
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(pixels[x][y])) {
             pixels[x][y] = color;
             spread(x, y - 1, color, condition);
             spread(x + 1, y, color, condition);
@@ -128,7 +129,7 @@ public class Canvas extends JPanel {
     }
 
     public Color eyeDrop(int x, int y) {
-        if(x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
             return pixels[x][y];
         } else {
             return Color.BLACK;
@@ -167,18 +168,6 @@ public class Canvas extends JPanel {
         g.drawRect(left - 1, top - 1, (int) imageWidth + 1, (int) imageHeight + 1);
     }
 
-    public void setPixels(Color[][] pixels) {
-        this.pixels = pixels;
-    }
-
-    public void setCanvasHeight(int canvasHeight) {
-        this.canvasHeight = canvasHeight;
-    }
-
-    public void setCanvasWidth(int canvasWidth) {
-        this.canvasWidth = canvasWidth;
-    }
-
     public void setPanX(int panX) {
         this.panX = panX;
     }
@@ -211,6 +200,8 @@ public class Canvas extends JPanel {
         return scale;
     }
 
-    public Color[][] getPixels() { return pixels; }
+    public Color[][] getPixels() {
+        return pixels;
+    }
 
 }

@@ -25,6 +25,8 @@ public class Save implements Plugin {
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
         Canvas canvas = shop.getCanvas();
 
+        if(canvas == null) return;
+
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Specify a file to save");
         fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
