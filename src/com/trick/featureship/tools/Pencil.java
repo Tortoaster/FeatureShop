@@ -24,7 +24,7 @@ public class Pencil extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.pixel(x, y, colorpicker.getSelectedColor());
+        canvas.pixel(x, y, colorpicker.getColor());
         canvas.repaint();
 
         previousX = x;
@@ -38,7 +38,7 @@ public class Pencil extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(previousX, previousY, x, y, colorpicker.getSelectedColor());
+        canvas.line(previousX, previousY, x, y, colorpicker.getColor());
         canvas.repaint();
 
         previousX = x;

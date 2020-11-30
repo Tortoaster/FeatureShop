@@ -10,16 +10,10 @@ public class Toolbar extends JPanel {
         void selected(Tool tool);
     }
 
-    private ToolbarListener listener;
-
-    private final Tool[] tools;
-
     private Tool activeTool;
 
     public Toolbar(Tool[] tools, FeatureShop shop, ToolbarListener listener) throws IllegalArgumentException {
         if (tools.length < 1) throw new IllegalArgumentException("You must include at least 1 tool.");
-
-        this.tools = tools;
 
         activeTool = tools[0];
 
@@ -28,7 +22,6 @@ public class Toolbar extends JPanel {
             button.addActionListener(actionEvent -> {
                 activeTool = t;
                 listener.selected(t);
-                //shop.setCurrentColor(shop.getCurrentColor() == Color.BLACK ? Color.WHITE : Color.BLACK);
             });
             add(button);
         }

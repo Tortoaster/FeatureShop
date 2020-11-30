@@ -8,7 +8,7 @@ import java.awt.event.*;
 
 public class FeatureShop implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
-    private static final Colorpicker COLORPICKER = new Colorpicker();
+    private static final Colorpicker COLORPICKER = new Colorpicker(Color.BLACK);
 
     private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLORPICKER), new Line(COLORPICKER)};
 
