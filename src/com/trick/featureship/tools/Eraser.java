@@ -2,23 +2,19 @@ package com.trick.featureship.tools;
 
 import com.trick.featureship.actions.Action;
 import com.trick.featureship.Canvas;
-import com.trick.featureship.actions.ColorPicker;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class Line implements Tool {
+public class Eraser implements Tool {
 
-    private final ColorPicker colorPicker;
+    private static final Color EMPTY = Color.WHITE;
 
-    private int fromX, fromY;
-
-    public Line(ColorPicker colorPicker) {
-        this.colorPicker = colorPicker;
-    }
+    private int previousX, previousY;
 
     @Override
     public String getName() {
-        return "Line";
+        return "Eraser";
     }
 
     @Override
@@ -26,24 +22,27 @@ public class Line implements Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.pixel(x, y, colorPicker.getColor());
+        canvas.pixel(x, y, EMPTY);
         canvas.repaint();
 
-        fromX = x;
-        fromY = y;
+        previousX = x;
+        previousY = y;
     }
 
     @Override
-    public void mouseReleased(MouseEvent e, Canvas canvas) {
+    public void mouseDragged(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(fromX, fromY, x, y, colorPicker.getColor());
+        canvas.line(previousX, previousY, x, y, EMPTY);
         canvas.repaint();
+
+        previousX = x;
+        previousY = y;
     }
 
     @Override
     public Action[] getActions() {
-        return new Action[]{colorPicker};
+        return new Action[0];
     }
 }

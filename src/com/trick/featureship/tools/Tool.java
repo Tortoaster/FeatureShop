@@ -1,46 +1,48 @@
 package com.trick.featureship.tools;
 
-import com.trick.featureship.Action;
 import com.trick.featureship.Canvas;
+import com.trick.featureship.actions.Action;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-public abstract class Tool {
+public interface Tool {
 
-    private final String name;
+    String getName();
 
-    public Tool(String name) {
-        this.name = name;
+    Action[] getActions();
+
+    default void keyTyped(KeyEvent e, Canvas canvas) {
     }
 
-    public void keyTyped(KeyEvent e, Canvas canvas) {}
-
-    public void keyPressed(KeyEvent e, Canvas canvas) {}
-
-    public void keyReleased(KeyEvent e, Canvas canvas) {}
-
-    public void mouseClicked(MouseEvent e, Canvas canvas) {}
-
-    public void mousePressed(MouseEvent e, Canvas canvas) {}
-
-    public void mouseReleased(MouseEvent e, Canvas canvas) {}
-
-    public void mouseEntered(MouseEvent e, Canvas canvas) {}
-
-    public void mouseExited(MouseEvent e, Canvas canvas) {}
-
-    public void mouseDragged(MouseEvent e, Canvas canvas) {}
-
-    public void mouseMoved(MouseEvent e, Canvas canvas) {}
-
-    public void mouseWheelMoved(MouseWheelEvent e, Canvas canvas) {}
-
-    public String getName() {
-        return name;
+    default void keyPressed(KeyEvent e, Canvas canvas) {
     }
 
-    abstract public Action[] getActions();
+    default void keyReleased(KeyEvent e, Canvas canvas) {
+    }
 
+    default void mouseClicked(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mousePressed(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mouseReleased(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mouseEntered(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mouseExited(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mouseDragged(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mouseMoved(MouseEvent e, Canvas canvas) {
+    }
+
+    default void mouseWheelMoved(MouseWheelEvent e, Canvas canvas) {
+    }
 }

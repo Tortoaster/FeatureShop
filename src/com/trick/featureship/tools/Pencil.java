@@ -1,30 +1,32 @@
 package com.trick.featureship.tools;
 
-import com.trick.featureship.Action;
+import com.trick.featureship.actions.Action;
 import com.trick.featureship.Canvas;
-import com.trick.featureship.Colorpicker;
+import com.trick.featureship.actions.ColorPicker;
 
 import java.awt.event.MouseEvent;
 
-public class Pencil extends Tool {
+public class Pencil implements Tool {
 
-    private final Colorpicker colorpicker;
+    private final ColorPicker colorPicker;
 
     private int previousX, previousY;
 
-    public Pencil(Colorpicker colorpicker) {
-        super("Pencil");
-        this.colorpicker = colorpicker;
+    public Pencil(ColorPicker colorPicker) {
+        this.colorPicker = colorPicker;
+    }
+
+    @Override
+    public String getName() {
+        return "Pencil";
     }
 
     @Override
     public void mousePressed(MouseEvent e, Canvas canvas) {
-        super.mousePressed(e, canvas);
-
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.pixel(x, y, colorpicker.getColor());
+        canvas.pixel(x, y, colorPicker.getColor());
         canvas.repaint();
 
         previousX = x;
@@ -33,12 +35,10 @@ public class Pencil extends Tool {
 
     @Override
     public void mouseDragged(MouseEvent e, Canvas canvas) {
-        super.mouseDragged(e, canvas);
-
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(previousX, previousY, x, y, colorpicker.getColor());
+        canvas.line(previousX, previousY, x, y, colorPicker.getColor());
         canvas.repaint();
 
         previousX = x;
@@ -47,6 +47,6 @@ public class Pencil extends Tool {
 
     @Override
     public Action[] getActions() {
-        return new Action[]{colorpicker};
+        return new Action[]{colorPicker};
     }
 }

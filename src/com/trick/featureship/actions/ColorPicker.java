@@ -1,15 +1,16 @@
-package com.trick.featureship;
+package com.trick.featureship.actions;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Colorpicker extends JButton implements Action {
+public class ColorPicker extends JButton implements Action {
 
     private Color color;
 
-    public Colorpicker(Color c) {
+    public ColorPicker(Color c) {
         setColor(c);
+        setPreferredSize(new Dimension(20, 20));
         addActionListener(arg0 -> {
             Color newColor = JColorChooser.showDialog(null, "Pick a color", color);
             setColor(newColor);
