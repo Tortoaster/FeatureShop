@@ -2,6 +2,9 @@ package com.trick.featureship;
 
 import com.trick.featureship.actions.Action;
 import com.trick.featureship.actions.ColorPicker;
+import com.trick.featureship.actions.NumberPicker;
+import com.trick.featureship.plugins.Plugin;
+import com.trick.featureship.plugins.Save;
 import com.trick.featureship.tools.*;
 
 import javax.swing.*;
@@ -10,9 +13,12 @@ import java.awt.event.*;
 
 public class FeatureShop implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
-    private static final ColorPicker COLORPICKER = new ColorPicker(Color.BLACK);
+    private static final ColorPicker COLOR = new ColorPicker("Color", Color.BLACK);
+    private static final NumberPicker SIZE = new NumberPicker("Size", 1, 10, 1);
 
-    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLORPICKER), new Eraser(), new Line(COLORPICKER)};
+    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE)};
+
+    private static final Plugin[] PLUGINS = new Plugin[]{new Save()};
 
     private final Canvas canvas = new Canvas(128, 128);
 
@@ -43,7 +49,7 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
 
         frame.add(canvas, BorderLayout.CENTER);
         frame.add(toolbar, BorderLayout.LINE_END);
-        frame.add(new Menubar(new Plugin[0]));
+        frame.setJMenuBar(new Menubar(PLUGINS, this));
 
         frame.pack();
         frame.setVisible(true);
@@ -53,6 +59,10 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
         canvas.addMouseMotionListener(this);
         canvas.addMouseWheelListener(this);
     }
+
+    public JFrame getFrame() { return frame; }
+
+    public Canvas getCanvas() { return canvas; }
 
     @Override
     public void keyTyped(KeyEvent e) {

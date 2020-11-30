@@ -34,13 +34,21 @@ public class Canvas extends JPanel {
         }
     }
 
-    public void pixel(int x, int y, Color color) {
-        if(x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
-            pixels[x][y] = color;
+    public void point(int x, int y, int radius, Color color) {
+        for(int dY = -radius; dY < radius; dY++) {
+            for (int dX = -radius; dX < radius; dX++) {
+                if(dX * dX + dY * dY < radius * radius) {
+                    int fX = x + dX;
+                    int fY = y + dY;
+                    if(fX >= 0 && fX < canvasWidth && fY >= 0 && fY < canvasHeight) {
+                        pixels[fX][fY] = color;
+                    }
+                }
+            }
         }
     }
 
-    public void line(int x1, int y1, int x2, int y2, Color color) {
+    public void line(int x1, int y1, int x2, int y2, int radius, Color color) {
         int x, y;
         int dx, dy;
         int incx, incy;
@@ -71,7 +79,7 @@ public class Canvas extends JPanel {
             dx <<= 1;
 
             while (x != x2) {
-                pixel(x, y, color);
+                point(x, y, radius, color);
                 if (balance >= 0) {
                     y += incy;
                     balance -= dx;
@@ -79,14 +87,14 @@ public class Canvas extends JPanel {
                 balance += dy;
                 x += incx;
             }
-            pixel(x, y, color);
+            point(x, y, radius, color);
         } else {
             dx <<= 1;
             balance = dx - dy;
             dy <<= 1;
 
             while (y != y2) {
-                pixel(x, y, color);
+                point(x, y, radius, color);
                 if (balance >= 0) {
                     x += incx;
                     balance -= dy;
@@ -94,7 +102,7 @@ public class Canvas extends JPanel {
                 balance += dx;
                 y += incy;
             }
-            pixel(x, y, color);
+            point(x, y, radius, color);
         }
     }
 
@@ -142,6 +150,14 @@ public class Canvas extends JPanel {
         this.scale = scale;
     }
 
+    public int getCanvasWidth() {
+        return canvasWidth;
+    }
+
+    public int getCanvasHeight() {
+        return canvasHeight;
+    }
+
     public int getPanX() {
         return panX;
     }
@@ -153,4 +169,7 @@ public class Canvas extends JPanel {
     public float getScale() {
         return scale;
     }
+
+    public Color[][] getPixels() { return pixels; }
+
 }

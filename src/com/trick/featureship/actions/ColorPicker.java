@@ -4,22 +4,35 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ColorPicker extends JButton implements Action {
+public class ColorPicker implements Action {
+
+    private static final int SIZE = 20;
+
+    private final String name;
 
     private Color color;
 
-    public ColorPicker(Color c) {
-        setColor(c);
-        setPreferredSize(new Dimension(20, 20));
-        addActionListener(arg0 -> {
+    private final JButton button = new JButton();
+
+    public ColorPicker(String name, Color color) {
+        this.name = name;
+        setColor(color);
+
+        button.setPreferredSize(new Dimension(SIZE, SIZE));
+        button.addActionListener(arg0 -> {
             Color newColor = JColorChooser.showDialog(null, "Pick a color", color);
             setColor(newColor);
         });
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public JComponent getComponent() {
-        return this;
+        return button;
     }
 
     public static ImageIcon createIcon(Color main, int width, int height) {
@@ -33,8 +46,8 @@ public class ColorPicker extends JButton implements Action {
 
     private void setColor(Color color) {
         this.color = color;
-        setIcon(createIcon(this.color, Math.max(getWidth(), 100), Math.max(getHeight(), 100)));
-        repaint();
+        button.setIcon(createIcon(color, SIZE, SIZE));
+        button.repaint();
     }
 
     public Color getColor() {

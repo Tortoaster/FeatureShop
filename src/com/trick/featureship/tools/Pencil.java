@@ -3,17 +3,20 @@ package com.trick.featureship.tools;
 import com.trick.featureship.actions.Action;
 import com.trick.featureship.Canvas;
 import com.trick.featureship.actions.ColorPicker;
+import com.trick.featureship.actions.NumberPicker;
 
 import java.awt.event.MouseEvent;
 
 public class Pencil implements Tool {
 
     private final ColorPicker colorPicker;
+    private final NumberPicker numberPicker;
 
     private int previousX, previousY;
 
-    public Pencil(ColorPicker colorPicker) {
+    public Pencil(ColorPicker colorPicker, NumberPicker numberPicker) {
         this.colorPicker = colorPicker;
+        this.numberPicker = numberPicker;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class Pencil implements Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.pixel(x, y, colorPicker.getColor());
+        canvas.point(x, y, numberPicker.getNumber(), colorPicker.getColor());
         canvas.repaint();
 
         previousX = x;
@@ -38,7 +41,7 @@ public class Pencil implements Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(previousX, previousY, x, y, colorPicker.getColor());
+        canvas.line(previousX, previousY, x, y, numberPicker.getNumber(), colorPicker.getColor());
         canvas.repaint();
 
         previousX = x;
@@ -47,6 +50,6 @@ public class Pencil implements Tool {
 
     @Override
     public Action[] getActions() {
-        return new Action[]{colorPicker};
+        return new Action[]{colorPicker, numberPicker};
     }
 }

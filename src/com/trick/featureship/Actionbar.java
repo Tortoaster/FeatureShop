@@ -8,6 +8,7 @@ public class Actionbar extends JPanel {
 
     public Actionbar(com.trick.featureship.actions.Action[] actions, FeatureShop shop) {
         for (Action a: actions) {
+            add(new JLabel(a.getName() + ":"));
             add(a.getComponent());
         }
     }
