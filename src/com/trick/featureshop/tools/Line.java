@@ -1,27 +1,27 @@
-package com.trick.featureship.tools;
+package com.trick.featureshop.tools;
 
-import com.trick.featureship.actions.Action;
-import com.trick.featureship.Canvas;
-import com.trick.featureship.actions.ColorPicker;
-import com.trick.featureship.actions.NumberPicker;
+import com.trick.featureshop.actions.Action;
+import com.trick.featureshop.Canvas;
+import com.trick.featureshop.actions.ColorPicker;
+import com.trick.featureshop.actions.NumberPicker;
 
 import java.awt.event.MouseEvent;
 
-public class Pencil implements Tool {
+public class Line implements Tool {
 
     private final ColorPicker colorPicker;
     private final NumberPicker numberPicker;
 
-    private int previousX, previousY;
+    private int fromX, fromY;
 
-    public Pencil(ColorPicker colorPicker, NumberPicker numberPicker) {
+    public Line(ColorPicker colorPicker, NumberPicker numberPicker) {
         this.colorPicker = colorPicker;
         this.numberPicker = numberPicker;
     }
 
     @Override
     public String getName() {
-        return "Pencil";
+        return "Line";
     }
 
     @Override
@@ -32,24 +32,21 @@ public class Pencil implements Tool {
         canvas.point(x, y, numberPicker.getNumber(), colorPicker.getColor());
         canvas.repaint();
 
-        previousX = x;
-        previousY = y;
+        fromX = x;
+        fromY = y;
     }
 
     @Override
-    public void mouseDragged(MouseEvent e, Canvas canvas) {
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(previousX, previousY, x, y, numberPicker.getNumber(), colorPicker.getColor());
+        canvas.line(fromX, fromY, x, y, numberPicker.getNumber(), colorPicker.getColor());
         canvas.repaint();
-
-        previousX = x;
-        previousY = y;
     }
 
     @Override
     public Action[] getActions() {
-        return new Action[]{colorPicker, numberPicker};
+        return new Action[]{colorPicker};
     }
 }

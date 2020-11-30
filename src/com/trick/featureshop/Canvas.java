@@ -1,4 +1,4 @@
-package com.trick.featureship;
+package com.trick.featureshop;
 
 import javax.swing.*;
 import java.awt.*;

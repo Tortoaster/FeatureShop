@@ -1,11 +1,11 @@
-package com.trick.featureship;
+package com.trick.featureshop;
 
-import com.trick.featureship.actions.Action;
-import com.trick.featureship.actions.ColorPicker;
-import com.trick.featureship.actions.NumberPicker;
-import com.trick.featureship.plugins.Plugin;
-import com.trick.featureship.plugins.Save;
-import com.trick.featureship.tools.*;
+import com.trick.featureshop.actions.Action;
+import com.trick.featureshop.actions.ColorPicker;
+import com.trick.featureshop.actions.NumberPicker;
+import com.trick.featureshop.plugins.Plugin;
+import com.trick.featureshop.plugins.Save;
+import com.trick.featureshop.tools.*;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,7 @@
-package com.trick.featureship.plugins;
+package com.trick.featureshop.plugins;
 
-import com.trick.featureship.Canvas;
-import com.trick.featureship.FeatureShop;
+import com.trick.featureshop.Canvas;
+import com.trick.featureshop.FeatureShop;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

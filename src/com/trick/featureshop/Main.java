@@ -1,4 +1,4 @@
-package com.trick.featureship;
+package com.trick.featureshop;
 
 public class Main {
 

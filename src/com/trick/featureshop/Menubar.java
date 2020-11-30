@@ -1,6 +1,6 @@
-package com.trick.featureship;
+package com.trick.featureshop;
 
-import com.trick.featureship.plugins.Plugin;
+import com.trick.featureshop.plugins.Plugin;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

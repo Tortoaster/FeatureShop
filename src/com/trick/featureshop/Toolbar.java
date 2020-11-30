@@ -1,6 +1,6 @@
-package com.trick.featureship;
+package com.trick.featureshop;
 
-import com.trick.featureship.tools.Tool;
+import com.trick.featureshop.tools.Tool;
 
 import javax.swing.*;
 

@@ -1,6 +1,6 @@
-package com.trick.featureship.plugins;
+package com.trick.featureshop.plugins;
 
-import com.trick.featureship.FeatureShop;
+import com.trick.featureshop.FeatureShop;
 
 import java.awt.event.ActionEvent;
 

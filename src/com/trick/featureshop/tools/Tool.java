@@ -1,7 +1,7 @@
-package com.trick.featureship.tools;
+package com.trick.featureshop.tools;
 
-import com.trick.featureship.Canvas;
-import com.trick.featureship.actions.Action;
+import com.trick.featureshop.Canvas;
+import com.trick.featureshop.actions.Action;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
