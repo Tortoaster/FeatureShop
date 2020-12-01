@@ -2,10 +2,12 @@ package com.trick.featureshop;
 
 import com.trick.featureshop.actions.Action;
 import com.trick.featureshop.actions.ColorPicker;
+import com.trick.featureshop.actions.FillShape;
 import com.trick.featureshop.actions.NumberPicker;
 import com.trick.featureshop.plugins.Plugin;
 import com.trick.featureshop.plugins.*;
 import com.trick.featureshop.tools.*;
+import com.trick.featureshop.tools.Rectangle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +18,9 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
 
     private static final ColorPicker COLOR = new ColorPicker("Color", Color.BLACK);
     private static final NumberPicker SIZE = new NumberPicker("Size", 1, 10, 1);
+    private static final FillShape FILL = new FillShape(false);
 
-    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR)};
+    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Rectangle(FILL, COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR)};
 
     private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open()};
 
