@@ -11,6 +11,10 @@ public class Canvas extends JPanel {
         boolean accept(Color color);
     }
 
+    public interface RepaintListener {
+        void repaint();
+    }
+
     public static final int MAX_ZOOM = 50;
     public static final int PREVIEW_SIZE = 80;
 
@@ -26,6 +30,8 @@ public class Canvas extends JPanel {
     private int top;
 
     private float scale = 1;
+
+    private final ArrayList<RepaintListener> repaintListeners = new ArrayList<RepaintListener>();
 
     private final ArrayList<Color[][]> layers = new ArrayList<Color[][]>();
 
@@ -156,7 +162,6 @@ public class Canvas extends JPanel {
         }
 
         layers.add(selectedLayer, pixels);
-        selectedLayer++;
     }
 
     public void deleteLayer() {
@@ -191,6 +196,10 @@ public class Canvas extends JPanel {
                 }
             }
         }
+    }
+
+    void addRepaintListener(RepaintListener repaintListener) {
+        repaintListeners.add(repaintListener);
     }
 
     public int countLayers() {
@@ -249,6 +258,14 @@ public class Canvas extends JPanel {
 
         g.setColor(BACKGROUND);
         g.drawRect(left - 1, top - 1, (int) imageWidth + 1, (int) imageHeight + 1);
+    }
+
+    @Override
+    public void repaint(Rectangle r) {
+        super.repaint(r);
+        for(RepaintListener l: repaintListeners) {
+            l.repaint();
+        }
     }
 
     public void setPanX(int panX) {

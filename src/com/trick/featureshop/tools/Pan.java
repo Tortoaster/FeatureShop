@@ -16,7 +16,7 @@ public class Pan extends Tool {
 
     @Override
     public String getIconName() {
-        return "arrow";
+        return "hand";
     }
 
     @Override

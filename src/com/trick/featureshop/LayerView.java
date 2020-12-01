@@ -15,7 +15,7 @@ public class LayerView extends JPanel {
     public LayerView(Canvas canvas) {
         this.canvas = canvas;
 
-        JPanel controls = new JPanel();
+        JPanel controls = new JPanel(new GridLayout(2, 2));
         JButton newLayer = new JButton("+");
         JButton deleteLayer = new JButton("-");
         JButton up = new JButton("^");
