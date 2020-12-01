@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class FillShape implements Action {
 
-    private JCheckBox checkBox = new JCheckBox();
+    private final JCheckBox checkBox = new JCheckBox();
 
     public FillShape(boolean fill) {
         checkBox.setSelected(fill);
