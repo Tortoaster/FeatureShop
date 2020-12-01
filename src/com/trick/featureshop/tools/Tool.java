@@ -13,6 +13,8 @@ public abstract class Tool {
 
     public abstract Action[] getActions();
 
+    public abstract String getIconName();
+
     public void keyTyped(KeyEvent e, Canvas canvas) {
     }
 

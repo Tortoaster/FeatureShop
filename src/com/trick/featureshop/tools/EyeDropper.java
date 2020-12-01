@@ -15,6 +15,11 @@ public class EyeDropper extends Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "pipette";
+    }
+
+    @Override
     public String getName() {
         return "Dropper";
     }
