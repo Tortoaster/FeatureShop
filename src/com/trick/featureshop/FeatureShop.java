@@ -22,7 +22,7 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
 
     private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Rectangle(FILL, COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR)};
 
-    private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open()};
+    private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open(), new Undo(), new Redo(), new Blur()};
 
     private final ArrayList<Canvas> canvases = new ArrayList<Canvas>();
 

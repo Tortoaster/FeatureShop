@@ -8,6 +8,8 @@ public interface Plugin {
 
     String getName();
 
+    Type getType();
+
     void buttonPressed(ActionEvent event, FeatureShop shop);
 
     String shortcut();

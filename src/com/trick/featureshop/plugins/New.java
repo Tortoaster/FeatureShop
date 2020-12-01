@@ -17,6 +17,11 @@ public class New implements Plugin {
     public String shortcut() { return "control N"; }
 
     @Override
+    public Type getType() {
+        return Type.FILE;
+    }
+
+    @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
         JFrame frame = shop.getFrame();
 

@@ -12,6 +12,11 @@ public class Redo implements Plugin {
     }
 
     @Override
+    public Type getType() {
+        return Type.HISTORY;
+    }
+
+    @Override
     public String shortcut() { return "control Y"; }
 
     @Override

@@ -17,4 +17,9 @@ public class Undo implements Plugin {
     @Override
     public String getName() { return "Undo"; }
 
+    @Override
+    public Type getType() {
+        return Type.HISTORY;
+    }
+
 }

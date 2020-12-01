@@ -22,6 +22,11 @@ public class Save implements Plugin {
     public String shortcut() { return "control S"; }
 
     @Override
+    public Type getType() {
+        return Type.FILE;
+    }
+
+    @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
         Canvas canvas = shop.getCanvas();
 

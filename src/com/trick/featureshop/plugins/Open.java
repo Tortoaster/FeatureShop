@@ -20,6 +20,11 @@ public class Open implements Plugin {
     public String shortcut() { return "control O"; }
 
     @Override
+    public Type getType() {
+        return Type.FILE;
+    }
+
+    @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select an image to open.");
