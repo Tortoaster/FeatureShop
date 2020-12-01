@@ -58,6 +58,7 @@ public class New implements Plugin {
         panel.add(button);
 
         d.add(panel);
+        d.getRootPane().setDefaultButton(button);
         d.setLocationRelativeTo(frame);
         d.setVisible(true);
     }
