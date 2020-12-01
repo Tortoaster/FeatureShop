@@ -20,6 +20,11 @@ public class Line implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "line-tool";
+    }
+
+    @Override
     public String getName() {
         return "Line";
     }

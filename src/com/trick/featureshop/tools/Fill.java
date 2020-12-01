@@ -31,6 +31,11 @@ public class Fill implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "paint-bucket";
+    }
+
+    @Override
     public String getName() {
         return "Fill";
     }

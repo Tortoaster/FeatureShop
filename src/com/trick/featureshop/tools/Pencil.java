@@ -25,6 +25,11 @@ public class Pencil implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "pencil";
+    }
+
+    @Override
     public void mousePressed(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());

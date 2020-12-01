@@ -13,6 +13,8 @@ public interface Tool {
 
     Action[] getActions();
 
+    String getIconName();
+
     default void keyTyped(KeyEvent e, Canvas canvas) {
     }
 

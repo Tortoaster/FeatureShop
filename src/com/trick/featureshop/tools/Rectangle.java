@@ -35,6 +35,11 @@ public class Rectangle implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "black-and-white";
+    }
+
+    @Override
     public void mouseReleased(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());

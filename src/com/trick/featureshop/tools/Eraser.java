@@ -20,6 +20,11 @@ public class Eraser implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "eraser";
+    }
+
+    @Override
     public String getName() {
         return "Eraser";
     }

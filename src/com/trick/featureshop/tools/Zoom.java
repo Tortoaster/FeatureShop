@@ -19,6 +19,11 @@ public class Zoom implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "search";
+    }
+
+    @Override
     public Action[] getActions() {
         return new Action[0];
     }

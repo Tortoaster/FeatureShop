@@ -2,7 +2,10 @@ package com.trick.featureshop;
 
 import com.trick.featureshop.tools.Tool;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Toolbar extends JPanel {
 
@@ -18,16 +21,34 @@ public class Toolbar extends JPanel {
         activeTool = tools[0];
 
         for (Tool t: tools) {
-            JButton button = new JButton(t.getName());
+            JButton button = new JButton();
             button.addActionListener(actionEvent -> {
                 activeTool = t;
                 listener.selected(t);
             });
+            try {
+                Image img = ImageIO.read(getClass().getResource("/icons/" + t.getIconName() + ".png"));
+                button.setIcon(new ImageIcon(img));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             add(button);
         }
+    }
+
+    private Image getScaledImage(Image srcImg, int w, int h){
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+
+        return resizedImg;
     }
 
     public Tool getActiveTool() {
         return activeTool;
     }
 }
+

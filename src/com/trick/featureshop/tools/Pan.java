@@ -15,6 +15,11 @@ public class Pan implements Tool {
     }
 
     @Override
+    public String getIconName() {
+        return "arrow";
+    }
+
+    @Override
     public void mousePressed(MouseEvent e, Canvas canvas) {
         x = e.getX() - canvas.getPanX();
         y = e.getY() - canvas.getPanY();
