@@ -207,14 +207,6 @@ public class Canvas extends JPanel {
         this.scale = scale;
     }
 
-    public int getCanvasWidth() {
-        return canvasWidth;
-    }
-
-    public int getCanvasHeight() {
-        return canvasHeight;
-    }
-
     public int getPanX() {
         return panX;
     }
