@@ -68,21 +68,8 @@ public class Save implements Plugin {
             File fileToSave = fileChooser.getSelectedFile();
             System.out.println("Save as file: " + fileToSave.getAbsolutePath());
 
-            BufferedImage image = new BufferedImage(canvas.getCanvasWidth(), canvas.getCanvasHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.getGraphics();
-            Color[][] pixels = canvas.getPixels();
-
-            for(int y = 0; y < canvas.getCanvasHeight(); y++) {
-                for(int x = 0; x < canvas.getCanvasWidth(); x++) {
-                    g.setColor(pixels[x][y]);
-                    g.drawLine(x, y, x, y);
-                }
-            }
-
-            System.out.println(image.toString());
-
             try {
-                ImageIO.write(image, fileToSave.getName().endsWith("png") ? "png" : "jpg", fileToSave);
+                ImageIO.write(canvas.toBufferedImage(), fileToSave.getName().endsWith("png") ? "png" : "jpg", fileToSave);
             } catch (IOException e) {
                 e.printStackTrace();
             }
