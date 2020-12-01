@@ -6,7 +6,7 @@ import com.trick.featureshop.actions.ColorPicker;
 
 import java.awt.event.MouseEvent;
 
-public class EyeDropper implements Tool {
+public class EyeDropper extends Tool {
 
     private final ColorPicker colorPicker;
 

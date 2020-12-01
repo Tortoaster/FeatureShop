@@ -5,7 +5,7 @@ import com.trick.featureshop.Canvas;
 
 import java.awt.event.MouseWheelEvent;
 
-public class Zoom implements Tool {
+public class Zoom extends Tool {
 
     @Override
     public String getName() {

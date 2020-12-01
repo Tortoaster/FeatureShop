@@ -7,7 +7,7 @@ import com.trick.featureshop.actions.NumberPicker;
 
 import java.awt.event.MouseEvent;
 
-public class Pencil implements Tool {
+public class Pencil extends Tool {
 
     private final ColorPicker colorPicker;
     private final NumberPicker numberPicker;

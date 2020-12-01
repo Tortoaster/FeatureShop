@@ -21,25 +21,28 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
 
     private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open()};
 
-    private final ArrayList<Canvas> canvases = new ArrayList<>();
+    private final ArrayList<Canvas> canvases = new ArrayList<Canvas>();
 
     private final JTabbedPane canvasPanes = new JTabbedPane();
 
     private final JFrame frame = new JFrame("FeatureShop");
 
-    private final Toolbar.ToolbarListener listener = tool -> {
-        if (this.actionbar != null) frame.remove(this.actionbar);
+    private final Toolbar.ToolbarListener listener = new Toolbar.ToolbarListener() {
+        @Override
+        public void selected(Tool tool) {
+            if (actionbar != null) frame.remove(actionbar);
 
-        Action[] actions = tool.getActions();
-        Actionbar actionbar = actions.length > 0 ? new Actionbar(actions, this) : null;
+            Action[] actions = tool.getActions();
+            Actionbar replacement = actions.length > 0 ? new Actionbar(actions, FeatureShop.this) : null;
 
-        if (actionbar != null) frame.add(actionbar, BorderLayout.PAGE_START);
+            if (replacement != null) frame.add(replacement, BorderLayout.PAGE_START);
 
-        this.actionbar = actionbar;
-        frame.revalidate();
+            actionbar = replacement;
+            frame.revalidate();
+        }
     };
 
-    private final Toolbar toolbar = new Toolbar(TOOLS, this, listener);
+    private final Toolbar toolbar = new Toolbar(TOOLS, listener);
 
     private Actionbar actionbar = null;
 

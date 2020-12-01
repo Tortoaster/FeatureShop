@@ -1,6 +1,8 @@
 package com.trick.featureshop.actions;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class NumberPicker implements Action {
 
@@ -20,8 +22,11 @@ public class NumberPicker implements Action {
         slider = new JSlider(min, max, value);
         label = new JLabel();
 
-        slider.addChangeListener(e -> {
-            updateLabel();
+        slider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updateLabel();
+            }
         });
 
         updateLabel();
