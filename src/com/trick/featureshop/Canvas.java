@@ -3,6 +3,7 @@ package com.trick.featureshop;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class Canvas extends JPanel {
@@ -17,6 +18,7 @@ public class Canvas extends JPanel {
 
     public static final int MAX_ZOOM = 50;
     public static final int PREVIEW_SIZE = 80;
+    public static final int MAX_HISTORY_SIZE = 20;
 
     private static final Color BACKGROUND = Color.DARK_GRAY, EMPTY = new Color(0, 0, 0, 0);
 
@@ -24,6 +26,7 @@ public class Canvas extends JPanel {
 
     private int panX = 0, panY = 0;
 
+    private int historyIndex = 0;
     private int selectedLayer;
 
     private int left;
@@ -33,25 +36,38 @@ public class Canvas extends JPanel {
 
     private final ArrayList<RepaintListener> repaintListeners = new ArrayList<RepaintListener>();
 
-    private final ArrayList<Color[][]> layers = new ArrayList<Color[][]>();
+    private ArrayList<Color[][]> layers = new ArrayList<Color[][]>();
 
-    public Canvas(int canvasWidth, int canvasHeight) throws IllegalArgumentException {
+    private final ArrayList<ArrayList<Color[][]>> history = new ArrayList<ArrayList<Color[][]>>();
+
+    private final LayerView layerView = new LayerView(this);
+
+    public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
         if (canvasWidth <= 0 || canvasHeight <= 0)
             throw new IllegalArgumentException("width and height must be greater than 0");
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+        setName(name);
 
         newLayer();
 
+        history.add(cloneLayers(layers));
+
         setLayout(new BorderLayout());
-        add(new LayerView(this), BorderLayout.LINE_END);
+        add(layerView, BorderLayout.LINE_END);
     }
 
-    public Canvas(Color[][] pixels) {
+    public Canvas(Color[][] pixels, String name) {
         layers.add(pixels);
+        setName(name);
+
+        history.add(cloneLayers(layers));
 
         canvasWidth = pixels.length;
         canvasHeight = pixels[0].length;
+
+        setLayout(new BorderLayout());
+        add(layerView, BorderLayout.LINE_END);
     }
 
     public void point(int x, int y, int radius, Color color) {
@@ -239,6 +255,47 @@ public class Canvas extends JPanel {
         return image;
     }
 
+    public void undo() {
+        if (historyIndex > 0) {
+            historyIndex--;
+            layers = cloneLayers(history.get(historyIndex));
+            repaint();
+            layerView.update();
+        }
+    }
+
+    public void redo() {
+        if (historyIndex < history.size() - 1) {
+            historyIndex++;
+            layers = cloneLayers(history.get(historyIndex));
+            repaint();
+            layerView.update();
+        }
+    }
+
+    public void save() {
+        history.add(historyIndex + 1, cloneLayers(layers));
+        if (history.size() > MAX_HISTORY_SIZE) {
+            history.remove(0);
+        } else {
+            historyIndex++;
+        }
+    }
+
+    private ArrayList<Color[][]> cloneLayers(ArrayList<Color[][]> layers) {
+        ArrayList<Color[][]> clone = new ArrayList<Color[][]>();
+
+        for (Color[][] p : layers) {
+            Color[][] clonePixels = new Color[canvasWidth][canvasHeight];
+            for (int x = 0; x < canvasWidth; x++) {
+                if (canvasHeight >= 0) System.arraycopy(p[x], 0, clonePixels[x], 0, canvasHeight);
+            }
+            clone.add(clonePixels);
+        }
+
+        return clone;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -299,4 +356,5 @@ public class Canvas extends JPanel {
     public int getSelectedLayer() {
         return selectedLayer;
     }
+
 }

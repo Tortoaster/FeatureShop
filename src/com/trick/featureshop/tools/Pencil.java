@@ -54,6 +54,11 @@ public class Pencil extends Tool {
     }
 
     @Override
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
+        canvas.save();
+    }
+
+    @Override
     public Action[] getActions() {
         return new Action[]{colorPicker, numberPicker};
     }

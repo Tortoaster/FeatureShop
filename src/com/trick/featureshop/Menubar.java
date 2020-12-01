@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 public class Menubar extends JMenuBar {
 
     public Menubar(Plugin[] plugins, FeatureShop shop) {
-        JMenu pluginsMenu = new JMenu("Plugins");
+        JMenu pluginsMenu = new JMenu("File");
         JMenu historyMenu = new JMenu("History");
 
         for (Plugin p : plugins) {

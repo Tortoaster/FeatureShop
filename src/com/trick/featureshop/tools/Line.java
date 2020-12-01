@@ -47,6 +47,7 @@ public class Line extends Tool {
         int y = canvas.screenToCanvasY(e.getY());
 
         canvas.line(fromX, fromY, x, y, numberPicker.getNumber(), colorPicker.getColor());
+        canvas.save();
         canvas.repaint();
     }
 

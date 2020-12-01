@@ -8,7 +8,7 @@ public class Undo implements Plugin {
 
     @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
-
+        shop.getCanvas().undo();
     }
 
     @Override

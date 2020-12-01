@@ -71,7 +71,7 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
         canvas.addMouseWheelListener(this);
 
         canvases.add(canvas);
-        canvasPanes.addTab("Untitled", canvas);
+        canvasPanes.addTab(canvas.getName(), canvas);
     }
 
     public Canvas getCanvas() {

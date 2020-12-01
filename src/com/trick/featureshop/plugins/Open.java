@@ -73,7 +73,7 @@ public class Open implements Plugin {
                     }
                 }
 
-                shop.addCanvas(new Canvas(pixels));
+                shop.addCanvas(new Canvas(pixels, fileToOpen.getName()));
 
             } catch (IOException e) {
                 e.printStackTrace();

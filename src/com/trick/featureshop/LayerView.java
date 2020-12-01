@@ -25,6 +25,7 @@ public class LayerView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canvas.newLayer();
+                canvas.save();
                 canvas.repaint();
                 update();
             }
@@ -34,6 +35,7 @@ public class LayerView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canvas.deleteLayer();
+                canvas.save();
                 canvas.repaint();
                 update();
             }
@@ -43,6 +45,7 @@ public class LayerView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canvas.moveLayerUp();
+                canvas.save();
                 canvas.repaint();
                 update();
             }
@@ -52,6 +55,7 @@ public class LayerView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canvas.moveLayerDown();
+                canvas.save();
                 canvas.repaint();
                 update();
             }
@@ -72,7 +76,7 @@ public class LayerView extends JPanel {
         update();
     }
 
-    private void update() {
+    public void update() {
         layers.removeAll();
 
         for(int i = canvas.countLayers() - 1; i >= 0; i--) {

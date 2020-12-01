@@ -8,7 +8,7 @@ public class Redo implements Plugin {
 
     @Override
     public void buttonPressed(ActionEvent event, FeatureShop shop) {
-
+        shop.getCanvas().redo();
     }
 
     @Override

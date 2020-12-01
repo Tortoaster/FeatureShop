@@ -62,6 +62,7 @@ public class Rectangle extends Tool {
             }
         }
 
+        canvas.save();
         canvas.repaint();
     }
 

@@ -36,6 +36,11 @@ public class Fill extends Tool {
     }
 
     @Override
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
+        canvas.save();
+    }
+
+    @Override
     public String getIconName() {
         return "paint-bucket";
     }

@@ -21,7 +21,7 @@ public class New implements Plugin {
         JFrame frame = shop.getFrame();
 
         final JDialog d = new JDialog(frame, "New Canvas", true);
-        d.setSize(new Dimension(300, 130));
+        d.setSize(new Dimension(320, 180));
         d.setResizable(false);
 
         final JPanel panel = new JPanel();
@@ -29,6 +29,9 @@ public class New implements Plugin {
 
         JLabel widthLabel = new JLabel("Width");
         JLabel heightLabel = new JLabel("Height");
+        JLabel textLabel = new JLabel("Filename");
+
+        JTextField textField = new JTextField("", 16);
 
         SpinnerModel widthModel = new SpinnerNumberModel(128, 1, 1024, 1);
         SpinnerModel heightModel = new SpinnerNumberModel(128, 1, 1024, 1);
@@ -41,7 +44,7 @@ public class New implements Plugin {
 
         JButton button = new JButton("Create");
         button.addActionListener(e -> {
-            shop.addCanvas(new Canvas((int) widthSpinner.getValue(), (int) heightSpinner.getValue()));
+            shop.addCanvas(new Canvas((int) widthSpinner.getValue(), (int) heightSpinner.getValue(), textField.getText().isEmpty() ? "Untitled" : textField.getText()));
             d.dispose();
         });
 
@@ -53,8 +56,13 @@ public class New implements Plugin {
         heightPanel.add(heightLabel);
         heightPanel.add(heightSpinner);
 
+        JPanel textPanel = new JPanel();
+        textPanel.add(textLabel);
+        textPanel.add(textField);
+
         panel.add(widthPanel);
         panel.add(heightPanel);
+        panel.add(textPanel);
         panel.add(button);
 
         d.add(panel);

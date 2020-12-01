@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 
 public class Eraser extends Tool {
 
-    private static final Color EMPTY = Color.WHITE;
+    private static final Color EMPTY = new Color(0, 0, 0, 0);
 
     private int previousX, previousY;
 
@@ -51,6 +51,11 @@ public class Eraser extends Tool {
 
         previousX = x;
         previousY = y;
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
+        canvas.save();
     }
 
     @Override
