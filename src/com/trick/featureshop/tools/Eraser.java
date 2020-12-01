@@ -7,7 +7,7 @@ import com.trick.featureshop.actions.NumberPicker;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class Eraser implements Tool {
+public class Eraser extends Tool {
 
     private static final Color EMPTY = Color.WHITE;
 

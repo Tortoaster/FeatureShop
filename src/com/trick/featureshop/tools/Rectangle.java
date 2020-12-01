@@ -8,7 +8,7 @@ import com.trick.featureshop.actions.NumberPicker;
 
 import java.awt.event.MouseEvent;
 
-public class Rectangle implements Tool {
+public class Rectangle extends Tool {
 
     private final FillShape fill;
     private final ColorPicker colorPicker;

@@ -5,7 +5,7 @@ import com.trick.featureshop.Canvas;
 
 import java.awt.event.MouseEvent;
 
-public class Pan implements Tool {
+public class Pan extends Tool {
 
     private int x, y;
 

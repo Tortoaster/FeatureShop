@@ -7,7 +7,7 @@ import com.trick.featureshop.actions.ColorPicker;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class Fill implements Tool {
+public class Fill extends Tool {
 
     private final ColorPicker colorPicker;
 
@@ -24,7 +24,12 @@ public class Fill implements Tool {
         Color replace = colorPicker.getColor();
 
         if(!color.equals(replace)) {
-            canvas.spread(x, y, replace, c -> c.equals(color));
+            canvas.spread(x, y, replace, new Canvas.ColorCondition() {
+                @Override
+                public boolean accept(Color c) {
+                    return c.equals(color);
+                }
+            });
         }
 
         canvas.repaint();

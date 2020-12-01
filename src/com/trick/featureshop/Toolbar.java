@@ -6,6 +6,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Toolbar extends JPanel {
 
@@ -15,16 +17,19 @@ public class Toolbar extends JPanel {
 
     private Tool activeTool;
 
-    public Toolbar(Tool[] tools, FeatureShop shop, ToolbarListener listener) throws IllegalArgumentException {
+    public Toolbar(Tool[] tools, ToolbarListener listener) throws IllegalArgumentException {
         if (tools.length < 1) throw new IllegalArgumentException("You must include at least 1 tool.");
 
         activeTool = tools[0];
 
         for (Tool t: tools) {
             JButton button = new JButton();
-            button.addActionListener(actionEvent -> {
-                activeTool = t;
-                listener.selected(t);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    activeTool = t;
+                    listener.selected(t);
+                }
             });
             try {
                 Image img = ImageIO.read(getClass().getResource("/icons/" + t.getIconName() + ".png"));

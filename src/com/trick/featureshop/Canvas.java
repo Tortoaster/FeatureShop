@@ -2,6 +2,8 @@ package com.trick.featureshop;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Canvas extends JPanel {
 
@@ -17,12 +19,14 @@ public class Canvas extends JPanel {
 
     private int panX = 0, panY = 0;
 
+    private int layer;
+
     private int left;
     private int top;
 
     private float scale = 1;
 
-    private final Color[][] pixels;
+    private final ArrayList<Color[][]> layers = new ArrayList<Color[][]>();
 
     public Canvas(int canvasWidth, int canvasHeight) throws IllegalArgumentException {
         if (canvasWidth <= 0 || canvasHeight <= 0)
@@ -30,17 +34,17 @@ public class Canvas extends JPanel {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
 
-        pixels = new Color[canvasWidth][canvasHeight];
+        layers.add(new Color[canvasWidth][canvasHeight]);
 
         for (int y = 0; y < canvasHeight; y++) {
             for (int x = 0; x < canvasWidth; x++) {
-                pixels[x][y] = Color.WHITE;
+                layers.get(layer)[x][y] = Color.WHITE;
             }
         }
     }
 
     public Canvas(Color[][] pixels) {
-        this.pixels = pixels;
+        layers.add(pixels);
 
         canvasWidth = pixels.length;
         canvasHeight = pixels[0].length;
@@ -53,7 +57,7 @@ public class Canvas extends JPanel {
                     int fX = x + dX;
                     int fY = y + dY;
                     if (fX >= 0 && fX < canvasWidth && fY >= 0 && fY < canvasHeight) {
-                        pixels[fX][fY] = color;
+                        layers.get(layer)[fX][fY] = color;
                     }
                 }
             }
@@ -119,8 +123,8 @@ public class Canvas extends JPanel {
     }
 
     public void spread(int x, int y, Color color, ColorCondition condition) {
-        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(pixels[x][y])) {
-            pixels[x][y] = color;
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(layers.get(layer)[x][y])) {
+            layers.get(layer)[x][y] = color;
             spread(x, y - 1, color, condition);
             spread(x + 1, y, color, condition);
             spread(x, y + 1, color, condition);
@@ -130,7 +134,7 @@ public class Canvas extends JPanel {
 
     public Color eyeDrop(int x, int y) {
         if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
-            return pixels[x][y];
+            return layers.get(layer)[x][y];
         } else {
             return Color.BLACK;
         }
@@ -142,6 +146,34 @@ public class Canvas extends JPanel {
 
     public int screenToCanvasY(int y) {
         return (int) ((y - top) / scale);
+    }
+
+    private void drawImage(Graphics g) {
+        for (Color[][] pixels : layers) {
+            for (int y = 0; y < canvasHeight; y++) {
+                for (int x = 0; x < canvasWidth; x++) {
+                    g.setColor(pixels[x][y]);
+                    g.fillRect((int) (x * scale) + left, (int) (y * scale) + top, (int) scale + 1, (int) scale + 1);
+                }
+            }
+        }
+    }
+
+    public BufferedImage toBufferedImage() {
+        BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+
+        for(Color[][] pixels : layers) {
+            for (int y = 0; y < canvasHeight; y++) {
+                for (int x = 0; x < canvasWidth; x++) {
+                    g.setColor(pixels[x][y]);
+                    g.drawLine(x, y, x, y);
+                }
+            }
+        }
+
+        g.dispose();
+        return image;
     }
 
     @Override
@@ -157,12 +189,7 @@ public class Canvas extends JPanel {
         g.setColor(BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        for (int y = 0; y < canvasHeight; y++) {
-            for (int x = 0; x < canvasWidth; x++) {
-                g.setColor(pixels[x][y]);
-                g.fillRect((int) (x * scale) + left, (int) (y * scale) + top, (int) scale + 1, (int) scale + 1);
-            }
-        }
+        drawImage(g);
 
         g.setColor(BACKGROUND);
         g.drawRect(left - 1, top - 1, (int) imageWidth + 1, (int) imageHeight + 1);
@@ -180,14 +207,6 @@ public class Canvas extends JPanel {
         this.scale = scale;
     }
 
-    public int getCanvasWidth() {
-        return canvasWidth;
-    }
-
-    public int getCanvasHeight() {
-        return canvasHeight;
-    }
-
     public int getPanX() {
         return panX;
     }
@@ -199,9 +218,4 @@ public class Canvas extends JPanel {
     public float getScale() {
         return scale;
     }
-
-    public Color[][] getPixels() {
-        return pixels;
-    }
-
 }
