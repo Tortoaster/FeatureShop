@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<properties>
+		<graphics key="legendautolayout" value="true"/>
+		<graphics key="showshortnames" value="false"/>
+		<graphics key="layout" value="horizontal"/>
+		<graphics key="showcollapsedconstraints" value="true"/>
+		<graphics key="legendhidden" value="false"/>
+		<graphics key="layoutalgorithm" value="1"/>
+	</properties>
+	<struct>
+		<and abstract="true" mandatory="true" name="FeatureShop">
+			<and mandatory="true" name="Base">
+				<and abstract="true" name="Tools">
+					<feature name="Line"/>
+					<feature name="Fill"/>
+					<feature name="EyeDropper"/>
+					<feature name="Eraser">
+						<graphics key="collapsed" value="false"/>
+					</feature>
+					<feature name="Rectangle"/>
+					<feature name="Zoom"/>
+					<feature name="Pan"/>
+				</and>
+				<feature name="Layers"/>
+				<and name="Plugins">
+					<feature name="New"/>
+					<feature name="Save"/>
+					<feature name="Open"/>
+					<feature name="Blur"/>
+				</and>
+				<feature name="History"/>
+				<and name="Actions">
+					<graphics key="collapsed" value="false"/>
+					<feature name="ColorPicker"/>
+					<feature name="SizePicker"/>
+					<feature name="FillShape"/>
+				</and>
+			</and>
+		</and>
+	</struct>
+	<constraints>
+		<rule>
+			<imp>
+				<var>EyeDropper</var>
+				<var>ColorPicker</var>
+			</imp>
+		</rule>
+	</constraints>
+</featureModel>

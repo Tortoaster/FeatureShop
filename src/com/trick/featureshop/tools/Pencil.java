@@ -1,65 +1,60 @@
-package com.trick.featureshop.tools;
+package com.trick.featureshop.tools; 
 
-import com.trick.featureshop.actions.Action;
-import com.trick.featureshop.Canvas;
-import com.trick.featureshop.actions.ColorPicker;
-import com.trick.featureshop.actions.NumberPicker;
+import com.trick.featureshop.Canvas; 
 
-import java.awt.event.MouseEvent;
+import java.awt.*; 
+import java.awt.event.MouseEvent; 
 
-public class Pencil extends Tool {
-
-    private final ColorPicker colorPicker;
-    private final NumberPicker numberPicker;
+public  class  Pencil  extends Tool {
+	
 
     private int previousX, previousY;
 
-    public Pencil(ColorPicker colorPicker, NumberPicker numberPicker) {
-        this.colorPicker = colorPicker;
-        this.numberPicker = numberPicker;
-    }
+	
+
+    public Pencil() { }
+
+	
 
     @Override
     public String getName() {
         return "Pencil";
     }
 
+	
+
     @Override
     public String getIconName() {
         return "pencil";
     }
+
+	
 
     @Override
     public void mousePressed(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.point(x, y, numberPicker.getNumber(), colorPicker.getColor());
+        canvas.point(x, y, 1, Color.BLACK);
         canvas.repaint();
 
         previousX = x;
         previousY = y;
     }
+
+	
 
     @Override
     public void mouseDragged(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(previousX, previousY, x, y, numberPicker.getNumber(), colorPicker.getColor());
+        canvas.line(previousX, previousY, x, y, 1, Color.BLACK);
         canvas.repaint();
 
         previousX = x;
         previousY = y;
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e, Canvas canvas) {
-        canvas.save();
-    }
 
-    @Override
-    public Action[] getActions() {
-        return new Action[]{colorPicker, numberPicker};
-    }
 }

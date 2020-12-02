@@ -1,36 +1,21 @@
-package com.trick.featureshop; 
+package com.trick.featureshop;
 
-import javax.swing.*; 
-import java.awt.*; 
+import javax.swing.*;
+import java.awt.*;
 
-public  class  Canvas  extends JPanel {
-	
+public class Canvas extends JPanel {
 
     public static final int MAX_ZOOM = 50;
 
-	
-
     private static final Color BACKGROUND = Color.DARK_GRAY;
-
-	
     public static final Color EMPTY = new Color(0, 0, 0, 0);
-
-	
 
     private final int canvasWidth, canvasHeight;
 
-	
-
     private int left;
-
-	
     private int top;
 
-	
-
     private Color[][] pixels, preview;
-
-	
 
     public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
         if (canvasWidth <= 0 || canvasHeight <= 0)
@@ -42,8 +27,6 @@ public  class  Canvas  extends JPanel {
         setName(name);
     }
 
-	
-
     public Canvas(Color[][] pixels, String name) {
         canvasWidth = pixels.length;
         canvasHeight = pixels[0].length;
@@ -53,13 +36,9 @@ public  class  Canvas  extends JPanel {
         setName(name);
     }
 
-	
-
     public void point(int x, int y, int radius, Color color) {
         point(x, y, radius, color, false);
     }
-
-	
 
     public void point(int x, int y, int radius, Color color, boolean preview) {
         for (int dY = -radius; dY < radius; dY++) {
@@ -79,13 +58,9 @@ public  class  Canvas  extends JPanel {
         }
     }
 
-	
-
     public void line(int x1, int y1, int x2, int y2, int radius, Color color) {
         line(x1, y1, x2, y2, radius, color, false);
     }
-
-	
 
     public void line(int x1, int y1, int x2, int y2, int radius, Color color, boolean preview) {
         int x, y;
@@ -145,26 +120,18 @@ public  class  Canvas  extends JPanel {
         }
     }
 
-	
-
     public int screenToCanvasX(int x) {
         return (int) (x - left);
     }
-
-	
 
     public int screenToCanvasY(int y) {
         return (int) (y - top);
     }
 
-	
-
     private void drawImage(Graphics g) {
         drawLayer(g, pixels);
         drawLayer(g, preview);
     }
-
-	
 
     private void drawLayer(Graphics g, Color[][] pixels) {
         for (int y = 0; y < canvasHeight; y++) {
@@ -174,14 +141,10 @@ public  class  Canvas  extends JPanel {
             }
         }
     }
-
-	
     
     public void clearPreview() {
     	preview = emptyPixels();
     }
-
-	
 
     public Color[][] emptyPixels() {
         Color[][] clear = new Color[canvasWidth][canvasHeight];
@@ -194,8 +157,6 @@ public  class  Canvas  extends JPanel {
 
         return clear;
     }
-
-	
 
     @Override
     public void paintComponent(Graphics g) {
@@ -214,6 +175,4 @@ public  class  Canvas  extends JPanel {
         g.setColor(BACKGROUND);
         g.drawRect(left - 1, top - 1, (int) canvasWidth + 1, (int) canvasHeight + 1);
     }
-
-
 }

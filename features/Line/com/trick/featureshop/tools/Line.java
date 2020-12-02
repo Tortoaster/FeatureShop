@@ -1,42 +1,31 @@
-package com.trick.featureshop.tools; 
+package com.trick.featureshop.tools;
 
-import com.trick.featureshop.Canvas; 
+import com.trick.featureshop.Canvas;
 
-import java.awt.*; 
-import java.awt.event.MouseEvent; 
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
-public  class  Line  extends Tool {
-	
+public class Line extends Tool {
 	
     private int fromX, fromY;
-
-	
 
     private int getRadius() {
     	return 1;
     }
-
-	
     
     private Color getColor() {
     	return Color.BLACK;
     }
-
-	
     
     @Override
     public String getIconName() {
         return "line-tool";
     }
 
-	
-
     @Override
     public String getName() {
         return "Line";
     }
-
-	
 
     @Override
     public void mousePressed(MouseEvent e, Canvas canvas) {
@@ -51,8 +40,6 @@ public  class  Line  extends Tool {
         fromY = y;
     }
 
-	
-
     @Override
     public void mouseDragged(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
@@ -63,8 +50,6 @@ public  class  Line  extends Tool {
         canvas.repaint();
     }
 
-	
-
     @Override
     public void mouseReleased(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
@@ -74,6 +59,4 @@ public  class  Line  extends Tool {
         canvas.line(fromX, fromY, x, y, getRadius(), getColor());
         canvas.repaint();
     }
-
-
 }

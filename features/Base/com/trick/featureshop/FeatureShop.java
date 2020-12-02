@@ -1,28 +1,19 @@
-package com.trick.featureshop; 
+package com.trick.featureshop;
 
-import com.trick.featureshop.tools.*; 
+import com.trick.featureshop.tools.*;
 
-import javax.swing.*; 
-import java.awt.*; 
-import java.awt.event.*; import java.util.ArrayList; 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
-import com.trick.featureshop.tools.Pencil; 
-import com.trick.featureshop.tools.Tool; 
-
-public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
-	
+public class FeatureShop implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
     private final ArrayList<Canvas> canvases = new ArrayList<Canvas>();
 
-	
-
     private final JTabbedPane canvasPanes = new JTabbedPane();
 
-	
-
     private final JFrame frame = new JFrame("FeatureShop");
-
-	
 
     private final Toolbar.ToolbarListener listener = new Toolbar.ToolbarListener() {
         @Override
@@ -31,11 +22,7 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     };
 
-	
-
     private final Toolbar toolbar = new Toolbar(getTools(), listener, this);
-
-	
 
     public FeatureShop() {
         frame.setPreferredSize(new Dimension(800, 600));
@@ -52,36 +39,14 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         frame.pack();
         frame.setVisible(true);
     }
-
-	
     
-     private static ArrayList<Tool>  getTools__wrappee__Base  () {
+    private static ArrayList<Tool> getTools() {
     	ArrayList<Tool> tools = new ArrayList<Tool>();
     	
     	tools.add(new Pencil());
     	
     	return tools;
     }
-
-	
-	 private static ArrayList<Tool>  getTools__wrappee__Line  () {
-    	ArrayList<Tool> tools = getTools__wrappee__Base();
-    	
-    	tools.add(new Line());
-    	
-    	return tools;
-    }
-
-	
-	private static ArrayList<Tool> getTools() {
-    	ArrayList<Tool> tools = getTools__wrappee__Line();
-    	
-    	tools.add(new Eraser());
-    	
-    	return tools;
-    }
-
-	
 
     public void addCanvas(Canvas canvas) {
         canvas.addKeyListener(this);
@@ -93,8 +58,6 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         canvasPanes.addTab(canvas.getName(), canvas);
     }
 
-	
-
     public Canvas getCanvas() {
         int index = canvasPanes.getSelectedIndex();
         if(index > -1) {
@@ -104,16 +67,12 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-	
-
     @Override
     public void keyTyped(KeyEvent e) {
         if(getCanvas() != null) {
             toolbar.getActiveTool().keyTyped(e, getCanvas());
         }
     }
-
-	
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -122,16 +81,12 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-	
-
     @Override
     public void keyReleased(KeyEvent e) {
         if(getCanvas() != null) {
             toolbar.getActiveTool().keyReleased(e, getCanvas());
         }
     }
-
-	
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -140,16 +95,12 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-	
-
     @Override
     public void mousePressed(MouseEvent e) {
         if(getCanvas() != null) {
             toolbar.getActiveTool().mousePressed(e, getCanvas());
         }
     }
-
-	
 
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -158,16 +109,12 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-	
-
     @Override
     public void mouseEntered(MouseEvent e) {
         if(getCanvas() != null) {
             toolbar.getActiveTool().mouseEntered(e, getCanvas());
         }
     }
-
-	
 
     @Override
     public void mouseExited(MouseEvent e) {
@@ -176,16 +123,12 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-	
-
     @Override
     public void mouseDragged(MouseEvent e) {
         if(getCanvas() != null) {
             toolbar.getActiveTool().mouseDragged(e, getCanvas());
         }
     }
-
-	
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -194,14 +137,11 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-	
-
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if(getCanvas() != null) {
             toolbar.getActiveTool().mouseWheelMoved(e, getCanvas());
         }
     }
-
 
 }
