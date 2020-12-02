@@ -46,7 +46,7 @@ public class Line extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.setPreview(canvas.emptyPixels());
+        canvas.clearPreview();
         canvas.line(fromX, fromY, x, y, numberPicker.getNumber(), colorPicker.getColor(), true);
         canvas.repaint();
     }
@@ -56,7 +56,7 @@ public class Line extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.setPreview(canvas.emptyPixels());
+        canvas.clearPreview();
         canvas.line(fromX, fromY, x, y, numberPicker.getNumber(), colorPicker.getColor());
         canvas.save();
         canvas.repaint();

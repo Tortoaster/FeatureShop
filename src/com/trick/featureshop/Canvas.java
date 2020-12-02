@@ -3,7 +3,6 @@ package com.trick.featureshop;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,10 +10,6 @@ public class Canvas extends JPanel {
 
     public interface ColorCondition {
         boolean accept(Color color);
-    }
-
-    public interface RepaintListener {
-        void repaint();
     }
 
     public static final int MAX_ZOOM = 50;
@@ -34,8 +29,6 @@ public class Canvas extends JPanel {
     private int top;
 
     private float scale = 1;
-
-    private final ArrayList<RepaintListener> repaintListeners = new ArrayList<RepaintListener>();
 
     private ArrayList<Color[][]> layers = new ArrayList<Color[][]>();
 
@@ -231,10 +224,6 @@ public class Canvas extends JPanel {
         }
     }
 
-    void addRepaintListener(RepaintListener repaintListener) {
-        repaintListeners.add(repaintListener);
-    }
-
     public int countLayers() {
         return layers.size();
     }
@@ -382,14 +371,6 @@ public class Canvas extends JPanel {
         g.drawRect(left - 1, top - 1, (int) imageWidth + 1, (int) imageHeight + 1);
     }
 
-    @Override
-    public void repaint(Rectangle r) {
-        super.repaint(r);
-        for(RepaintListener l: repaintListeners) {
-            l.repaint();
-        }
-    }
-
     public void setPanX(int panX) {
         this.panX = panX;
     }
@@ -406,8 +387,8 @@ public class Canvas extends JPanel {
         this.selectedLayer = selectedLayer;
     }
 
-    public void setPreview(Color[][] preview) {
-        this.preview = preview;
+    public void clearPreview() {
+        this.preview = emptyPixels();
     }
 
     public int getPanX() {
