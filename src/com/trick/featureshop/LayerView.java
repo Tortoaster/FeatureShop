@@ -27,7 +27,6 @@ public class LayerView extends JPanel {
                 canvas.newLayer();
                 canvas.save();
                 canvas.repaint();
-                update();
             }
         });
 
@@ -37,7 +36,6 @@ public class LayerView extends JPanel {
                 canvas.deleteLayer();
                 canvas.save();
                 canvas.repaint();
-                update();
             }
         });
 
@@ -47,7 +45,6 @@ public class LayerView extends JPanel {
                 canvas.moveLayerUp();
                 canvas.save();
                 canvas.repaint();
-                update();
             }
         });
 
@@ -57,7 +54,6 @@ public class LayerView extends JPanel {
                 canvas.moveLayerDown();
                 canvas.save();
                 canvas.repaint();
-                update();
             }
         });
 

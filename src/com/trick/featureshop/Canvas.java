@@ -52,6 +52,8 @@ public class Canvas extends JPanel {
 
         newLayer();
 
+        layerView.update();
+
         history.add(cloneLayers(layers));
 
         setLayout(new BorderLayout());
@@ -60,6 +62,7 @@ public class Canvas extends JPanel {
 
     public Canvas(Color[][] pixels, String name) {
         layers.add(pixels);
+        layerView.update();
         setName(name);
 
         history.add(cloneLayers(layers));
@@ -281,6 +284,7 @@ public class Canvas extends JPanel {
         } else {
             historyIndex++;
         }
+        layerView.update();
     }
 
     public void blur() {
