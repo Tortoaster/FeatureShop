@@ -20,9 +20,9 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
     private static final NumberPicker SIZE = new NumberPicker("Size", 1, 10, 1);
     private static final FillShape FILL = new FillShape(false);
 
-    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Rectangle(FILL, COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR), new Clear()};
+    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Rectangle(FILL, COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR)};
 
-    private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open(), new Undo(), new Redo(), new Blur()};
+    private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open(), new Undo(), new Redo(), new Blur(), new Clear()};
 
     private final ArrayList<Canvas> canvases = new ArrayList<Canvas>();
 

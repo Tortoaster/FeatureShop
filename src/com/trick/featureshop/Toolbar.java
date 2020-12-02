@@ -30,7 +30,6 @@ public class Toolbar extends JPanel {
                     activeTool = t;
                     button.setSelected(true);
                     listener.selected(t);
-                    t.selected(shop.getCanvas());
                 }
             });
             try {

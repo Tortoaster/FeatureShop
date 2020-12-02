@@ -19,7 +19,7 @@ public class Canvas extends JPanel {
 
     public static final int MAX_ZOOM = 50;
     public static final int PREVIEW_SIZE = 80;
-    public static final int MAX_HISTORY_SIZE = 20;
+    public static final int MAX_HISTORY_SIZE = 50;
 
     private static final Color BACKGROUND = Color.DARK_GRAY, EMPTY = new Color(0, 0, 0, 0);
 
@@ -64,15 +64,15 @@ public class Canvas extends JPanel {
     }
 
     public Canvas(Color[][] pixels, String name) {
+        canvasWidth = pixels.length;
+        canvasHeight = pixels[0].length;
+
+        preview = emptyPixels();
         layers.add(pixels);
         layerView.update();
-        preview = emptyPixels();
         setName(name);
 
         history.add(cloneLayers(layers));
-
-        canvasWidth = pixels.length;
-        canvasHeight = pixels[0].length;
 
         setLayout(new BorderLayout());
         add(layerView, BorderLayout.LINE_END);
