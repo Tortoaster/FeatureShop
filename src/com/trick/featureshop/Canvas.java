@@ -318,6 +318,18 @@ public class Canvas extends JPanel {
         repaint();
     }
 
+    public void clear() {
+        Color[][] emptyLayer = new Color[canvasWidth][canvasHeight];
+
+        for (int y = 0; y < canvasHeight; y++) {
+            for (int x = 0; x < canvasWidth; x++) {
+                emptyLayer[x][y] = EMPTY;
+            }
+        }
+
+        layers.set(selectedLayer, emptyLayer);
+    }
+
     private ArrayList<Color[][]> cloneLayers(ArrayList<Color[][]> layers) {
         ArrayList<Color[][]> clone = new ArrayList<Color[][]>();
 

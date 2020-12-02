@@ -17,7 +17,7 @@ public class Toolbar extends JPanel {
 
     private Tool activeTool;
 
-    public Toolbar(Tool[] tools, ToolbarListener listener) throws IllegalArgumentException {
+    public Toolbar(Tool[] tools, ToolbarListener listener, FeatureShop shop) throws IllegalArgumentException {
         if (tools.length < 1) throw new IllegalArgumentException("You must include at least 1 tool.");
 
         activeTool = tools[0];
@@ -30,6 +30,7 @@ public class Toolbar extends JPanel {
                     activeTool = t;
                     button.setSelected(true);
                     listener.selected(t);
+                    t.selected(shop.getCanvas());
                 }
             });
             try {

@@ -15,6 +15,9 @@ public abstract class Tool {
 
     public abstract String getIconName();
 
+    public void selected(Canvas canvas) {
+    }
+
     public void keyTyped(KeyEvent e, Canvas canvas) {
     }
 
