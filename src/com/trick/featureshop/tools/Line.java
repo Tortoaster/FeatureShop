@@ -42,6 +42,16 @@ public class Line extends Tool {
     }
 
     @Override
+    public void mouseDragged(MouseEvent e, Canvas canvas) {
+        int x = canvas.screenToCanvasX(e.getX());
+        int y = canvas.screenToCanvasY(e.getY());
+
+        canvas.setPreview(canvas.emptyPixels());
+        canvas.line(fromX, fromY, x, y, numberPicker.getNumber(), colorPicker.getColor(), true);
+        canvas.repaint();
+    }
+
+    @Override
     public void mouseReleased(MouseEvent e, Canvas canvas) {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
@@ -53,6 +63,6 @@ public class Line extends Tool {
 
     @Override
     public Action[] getActions() {
-        return new Action[]{colorPicker};
+        return new Action[]{colorPicker, numberPicker};
     }
 }

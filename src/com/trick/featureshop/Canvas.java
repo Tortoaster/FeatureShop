@@ -43,11 +43,14 @@ public class Canvas extends JPanel {
 
     private final LayerView layerView = new LayerView(this);
 
+    private Color[][] preview;
+
     public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
         if (canvasWidth <= 0 || canvasHeight <= 0)
             throw new IllegalArgumentException("width and height must be greater than 0");
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+        preview = emptyPixels();
         setName(name);
 
         newLayer();
@@ -63,6 +66,7 @@ public class Canvas extends JPanel {
     public Canvas(Color[][] pixels, String name) {
         layers.add(pixels);
         layerView.update();
+        preview = emptyPixels();
         setName(name);
 
         history.add(cloneLayers(layers));
@@ -75,13 +79,21 @@ public class Canvas extends JPanel {
     }
 
     public void point(int x, int y, int radius, Color color) {
+        point(x, y, radius, color, false);
+    }
+
+    public void point(int x, int y, int radius, Color color, boolean preview) {
         for (int dY = -radius; dY < radius; dY++) {
             for (int dX = -radius; dX < radius; dX++) {
                 if (dX * dX + dY * dY < radius * radius) {
                     int fX = x + dX;
                     int fY = y + dY;
                     if (fX >= 0 && fX < canvasWidth && fY >= 0 && fY < canvasHeight) {
-                        layers.get(selectedLayer)[fX][fY] = color;
+                        if (preview) {
+                            this.preview[fX][fY] = color;
+                        } else {
+                            layers.get(selectedLayer)[fX][fY] = color;
+                        }
                     }
                 }
             }
@@ -89,6 +101,10 @@ public class Canvas extends JPanel {
     }
 
     public void line(int x1, int y1, int x2, int y2, int radius, Color color) {
+        line(x1, y1, x2, y2, radius, color, false);
+    }
+
+    public void line(int x1, int y1, int x2, int y2, int radius, Color color, boolean preview) {
         int x, y;
         int dx, dy;
         int incx, incy;
@@ -119,7 +135,7 @@ public class Canvas extends JPanel {
             dx <<= 1;
 
             while (x != x2) {
-                point(x, y, radius, color);
+                point(x, y, radius, color, preview);
                 if (balance >= 0) {
                     y += incy;
                     balance -= dx;
@@ -127,14 +143,14 @@ public class Canvas extends JPanel {
                 balance += dy;
                 x += incx;
             }
-            point(x, y, radius, color);
+            point(x, y, radius, color, preview);
         } else {
             dx <<= 1;
             balance = dx - dy;
             dy <<= 1;
 
             while (y != y2) {
-                point(x, y, radius, color);
+                point(x, y, radius, color, preview);
                 if (balance >= 0) {
                     x += incx;
                     balance -= dy;
@@ -142,7 +158,7 @@ public class Canvas extends JPanel {
                 balance += dx;
                 y += incy;
             }
-            point(x, y, radius, color);
+            point(x, y, radius, color, preview);
         }
     }
 
@@ -173,15 +189,7 @@ public class Canvas extends JPanel {
     }
 
     public void newLayer() {
-        Color[][] pixels = new Color[canvasWidth][canvasHeight];
-
-        for (int y = 0; y < canvasHeight; y++) {
-            for (int x = 0; x < canvasWidth; x++) {
-                pixels[x][y] = EMPTY;
-            }
-        }
-
-        layers.add(selectedLayer, pixels);
+        layers.add(selectedLayer, emptyPixels());
     }
 
     public void deleteLayer() {
@@ -209,11 +217,16 @@ public class Canvas extends JPanel {
 
     private void drawImage(Graphics g) {
         for (Color[][] pixels : layers) {
-            for (int y = 0; y < canvasHeight; y++) {
-                for (int x = 0; x < canvasWidth; x++) {
-                    g.setColor(pixels[x][y]);
-                    g.fillRect((int) (x * scale) + left, (int) (y * scale) + top, (int) scale + 1, (int) scale + 1);
-                }
+            drawLayer(g, pixels);
+        }
+        drawLayer(g, preview);
+    }
+
+    private void drawLayer(Graphics g, Color[][] layer) {
+        for (int y = 0; y < canvasHeight; y++) {
+            for (int x = 0; x < canvasWidth; x++) {
+                g.setColor(layer[x][y]);
+                g.fillRect((int) (x * scale) + left, (int) (y * scale) + top, (int) scale + 1, (int) scale + 1);
             }
         }
     }
@@ -319,15 +332,19 @@ public class Canvas extends JPanel {
     }
 
     public void clear() {
-        Color[][] emptyLayer = new Color[canvasWidth][canvasHeight];
+        layers.set(selectedLayer, emptyPixels());
+    }
+
+    public Color[][] emptyPixels() {
+        Color[][] clear = new Color[canvasWidth][canvasHeight];
 
         for (int y = 0; y < canvasHeight; y++) {
             for (int x = 0; x < canvasWidth; x++) {
-                emptyLayer[x][y] = EMPTY;
+                clear[x][y] = EMPTY;
             }
         }
 
-        layers.set(selectedLayer, emptyLayer);
+        return clear;
     }
 
     private ArrayList<Color[][]> cloneLayers(ArrayList<Color[][]> layers) {
@@ -387,6 +404,10 @@ public class Canvas extends JPanel {
 
     public void setSelectedLayer(int selectedLayer) {
         this.selectedLayer = selectedLayer;
+    }
+
+    public void setPreview(Color[][] preview) {
+        this.preview = preview;
     }
 
     public int getPanX() {
