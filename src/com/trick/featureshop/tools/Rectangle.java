@@ -71,6 +71,7 @@ public class Rectangle extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
+        canvas.setPreview(canvas.emptyPixels());
         canvas.line(fromX, fromY, fromX, y, numberPicker.getNumber(), colorPicker.getColor());
         canvas.line(fromX, fromY, x, fromY, numberPicker.getNumber(), colorPicker.getColor());
         canvas.line(x, y, fromX, y, numberPicker.getNumber(), colorPicker.getColor());
