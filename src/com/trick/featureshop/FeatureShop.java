@@ -1,13 +1,6 @@
 package com.trick.featureshop;
 
-import com.trick.featureshop.actions.Action;
-import com.trick.featureshop.actions.ColorPicker;
-import com.trick.featureshop.actions.FillShape;
-import com.trick.featureshop.actions.NumberPicker;
-import com.trick.featureshop.plugins.Plugin;
-import com.trick.featureshop.plugins.*;
 import com.trick.featureshop.tools.*;
-import com.trick.featureshop.tools.Rectangle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +9,7 @@ import java.util.ArrayList;
 
 public class FeatureShop implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
-    private static final ColorPicker COLOR = new ColorPicker("Color", Color.BLACK);
-    private static final NumberPicker SIZE = new NumberPicker("Size", 1, 10, 1);
-    private static final FillShape FILL = new FillShape(false);
-
-    private static final Tool[] TOOLS = new Tool[]{new Zoom(), new Pan(), new Pencil(COLOR, SIZE), new Eraser(SIZE), new Line(COLOR, SIZE), new Rectangle(FILL, COLOR, SIZE), new Fill(COLOR), new EyeDropper(COLOR)};
-
-    private static final Plugin[] PLUGINS = new Plugin[]{new New(), new Save(), new Open(), new Undo(), new Redo(), new Blur(), new Clear()};
+    private static final Tool[] TOOLS = new Tool[]{new Pencil()};
 
     private final ArrayList<Canvas> canvases = new ArrayList<Canvas>();
 
@@ -33,21 +20,11 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
     private final Toolbar.ToolbarListener listener = new Toolbar.ToolbarListener() {
         @Override
         public void selected(Tool tool) {
-            if (actionbar != null) frame.remove(actionbar);
-
-            Action[] actions = tool.getActions();
-            Actionbar replacement = actions.length > 0 ? new Actionbar(actions, FeatureShop.this) : null;
-
-            if (replacement != null) frame.add(replacement, BorderLayout.PAGE_START);
-
-            actionbar = replacement;
             frame.revalidate();
         }
     };
 
     private final Toolbar toolbar = new Toolbar(TOOLS, listener, this);
-
-    private Actionbar actionbar = null;
 
     public FeatureShop() {
         frame.setPreferredSize(new Dimension(800, 600));
@@ -56,9 +33,10 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
         toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
         toolbar.setBackground(Color.lightGray);
 
+        addCanvas(new Canvas(256,256, "Untitled"));
+
         frame.add(canvasPanes, BorderLayout.CENTER);
         frame.add(toolbar, BorderLayout.LINE_END);
-        frame.setJMenuBar(new Menubar(PLUGINS, this));
 
         frame.pack();
         frame.setVisible(true);
@@ -160,7 +138,4 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
         }
     }
 
-    public JFrame getFrame() {
-        return frame;
-    }
 }

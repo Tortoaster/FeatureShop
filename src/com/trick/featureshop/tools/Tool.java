@@ -1,7 +1,6 @@
 package com.trick.featureshop.tools;
 
 import com.trick.featureshop.Canvas;
-import com.trick.featureshop.actions.Action;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -10,8 +9,6 @@ import java.awt.event.MouseWheelEvent;
 public abstract class Tool {
 
     public abstract String getName();
-
-    public abstract Action[] getActions();
 
     public abstract String getIconName();
 
