@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-public abstract class Tool {
+public abstract class Tool { 
 
     public abstract String getName();
 
