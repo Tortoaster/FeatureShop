@@ -12,15 +12,16 @@
 		<and abstract="true" mandatory="true" name="FeatureShop">
 			<and mandatory="true" name="Base">
 				<and abstract="true" name="Tools">
+					<feature name="EyeDropper"/>
 					<feature name="Line"/>
 					<feature name="Fill"/>
-					<feature name="EyeDropper"/>
 					<feature name="Eraser">
 						<graphics key="collapsed" value="false"/>
 					</feature>
 					<feature name="Rectangle"/>
-					<feature name="Zoom"/>
-					<feature name="Pan"/>
+					<and name="Zoom">
+						<feature name="Pan"/>
+					</and>
 				</and>
 				<feature name="Layers"/>
 				<and name="Plugins">

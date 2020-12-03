@@ -9,6 +9,8 @@ import java.awt.event.*; import java.util.ArrayList;
 import com.trick.featureshop.tools.Pencil; 
 import com.trick.featureshop.tools.Tool; 
 
+import com.trick.featureshop.tools.Rectangle; 
+
 public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	
 
@@ -73,10 +75,46 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
     }
 
 	
-	private static ArrayList<Tool> getTools() {
+	 private static ArrayList<Tool>  getTools__wrappee__Fill  () {
     	ArrayList<Tool> tools = getTools__wrappee__Line();
     	
+    	tools.add(new Fill());
+    	
+    	return tools;
+    }
+
+	
+	 private static ArrayList<Tool>  getTools__wrappee__Eraser  () {
+    	ArrayList<Tool> tools = getTools__wrappee__Fill();
+    	
     	tools.add(new Eraser());
+    	
+    	return tools;
+    }
+
+	
+	 private static ArrayList<Tool>  getTools__wrappee__Rectangle  () {
+    	ArrayList<Tool> tools = getTools__wrappee__Eraser();
+    	
+    	tools.add(new Rectangle());
+    	
+    	return tools;
+    }
+
+	
+	 private static ArrayList<Tool>  getTools__wrappee__Zoom  () {
+    	ArrayList<Tool> tools = getTools__wrappee__Rectangle();
+    	
+    	tools.add(new Zoom());
+    	
+    	return tools;
+    }
+
+	
+	private static ArrayList<Tool> getTools() {
+    	ArrayList<Tool> tools = getTools__wrappee__Zoom();
+    	
+    	tools.add(new Pan());
     	
     	return tools;
     }

@@ -3,12 +3,12 @@
 	<feature automatic="selected" name="FeatureShop"/>
 	<feature automatic="selected" manual="selected" name="Base"/>
 	<feature automatic="selected" name="Tools"/>
+	<feature name="EyeDropper"/>
 	<feature manual="selected" name="Line"/>
 	<feature manual="selected" name="Fill"/>
-	<feature name="EyeDropper"/>
 	<feature manual="selected" name="Eraser"/>
 	<feature manual="selected" name="Rectangle"/>
-	<feature manual="selected" name="Zoom"/>
+	<feature automatic="selected" manual="selected" name="Zoom"/>
 	<feature manual="selected" name="Pan"/>
 	<feature name="Layers"/>
 	<feature name="Plugins"/>
@@ -17,7 +17,7 @@
 	<feature name="Open"/>
 	<feature name="Blur"/>
 	<feature name="History"/>
-	<feature name="Actions"/>
+	<feature manual="selected" name="Actions"/>
 	<feature name="ColorPicker"/>
 	<feature name="SizePicker"/>
 	<feature name="FillShape"/>

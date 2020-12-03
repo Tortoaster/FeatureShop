@@ -3,11 +3,7 @@ package com.trick.featureshop;
 import javax.swing.*; 
 import java.awt.*; 
 
-public  class  Canvas  extends JPanel {
-	
-
-    public static final int MAX_ZOOM = 50;
-
+public   class  Canvas  extends JPanel {
 	
 
     private static final Color BACKGROUND = Color.DARK_GRAY;
@@ -146,15 +142,15 @@ public  class  Canvas  extends JPanel {
     }
 
 	
-
-    public int screenToCanvasX(int x) {
-        return (int) (x - left);
+	
+	public int screenToCanvasX  (int x) {
+        return (int) ((x - left) / scale);
     }
 
 	
 
-    public int screenToCanvasY(int y) {
-        return (int) (y - top);
+    public int screenToCanvasY  (int y) {
+        return (int) ((y - top) / scale);
     }
 
 	
@@ -165,12 +161,12 @@ public  class  Canvas  extends JPanel {
     }
 
 	
-
-    private void drawLayer(Graphics g, Color[][] pixels) {
+    
+    private void drawLayer  (Graphics g, Color[][] layer) {
         for (int y = 0; y < canvasHeight; y++) {
             for (int x = 0; x < canvasWidth; x++) {
-                g.setColor(pixels[x][y]);
-                g.fillRect((int) x + left, y + top, 1, 1);
+                g.setColor(layer[x][y]);
+                g.fillRect((int) (x * scale) + left, (int) (y * scale) + top, (int) scale + 1, (int) scale + 1);
             }
         }
     }
@@ -196,23 +192,103 @@ public  class  Canvas  extends JPanel {
     }
 
 	
-
-    @Override
+	
+	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        left = (int) (getWidth() - canvasWidth) / 2;
-        top = (int) (getHeight() - canvasHeight) / 2;
+        float imageWidth = scale * canvasWidth;
+        float imageHeight = scale * canvasHeight;
+
+        left = (int) (getWidth() - imageWidth) / 2 + panX;
+        top = (int) (getHeight() - imageHeight) / 2 + panY;
 
         g.setColor(BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.clearRect(left, top, (int) canvasWidth, (int) canvasHeight);
+        g.clearRect(left, top, (int) imageWidth, (int) imageHeight);
 
         drawImage(g);
 
         g.setColor(BACKGROUND);
-        g.drawRect(left - 1, top - 1, (int) canvasWidth + 1, (int) canvasHeight + 1);
+        g.drawRect(left - 1, top - 1, (int) imageWidth + 1, (int) imageHeight + 1);
+    }
+
+	
+	public  interface  ColorCondition {
+		
+        boolean accept(Color color);
+
+
+	}
+
+	
+	
+	public void spread(int x, int y, Color color, ColorCondition condition) {
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(pixels[x][y])) {
+            pixels[x][y] = color;
+            spread(x, y - 1, color, condition);
+            spread(x + 1, y, color, condition);
+            spread(x, y + 1, color, condition);
+            spread(x - 1, y, color, condition);
+        }
+    }
+
+	
+
+    public Color eyeDrop(int x, int y) {
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
+            return pixels[x][y];
+        } else {
+            return Color.BLACK;
+        }
+    }
+
+	
+	public static final int MAX_ZOOM = 50;
+
+	
+	
+	private float scale = 1;
+
+	
+    
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+	
+    
+    public float getScale() {
+        return scale;
+    }
+
+	
+	
+	private int panX = 0, panY = 0;
+
+	
+	
+	public void setPanX(int panX) {
+        this.panX = panX;
+    }
+
+	
+
+    public void setPanY(int panY) {
+        this.panY = panY;
+    }
+
+	
+    
+    public int getPanX() {
+        return panX;
+    }
+
+	
+
+    public int getPanY() {
+        return panY;
     }
 
 

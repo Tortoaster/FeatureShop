@@ -5,8 +5,6 @@ import java.awt.*;
 
 public class Canvas extends JPanel {
 
-    public static final int MAX_ZOOM = 50;
-
     private static final Color BACKGROUND = Color.DARK_GRAY;
     public static final Color EMPTY = new Color(0, 0, 0, 0);
 
