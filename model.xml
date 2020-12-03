@@ -31,12 +31,12 @@
 					<feature name="Blur"/>
 				</and>
 				<feature name="History"/>
-				<and name="Actions">
+				<or name="Actions">
 					<graphics key="collapsed" value="false"/>
 					<feature name="ColorPicker"/>
 					<feature name="SizePicker"/>
 					<feature name="FillShape"/>
-				</and>
+				</or>
 			</and>
 		</and>
 	</struct>

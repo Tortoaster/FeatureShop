@@ -3,9 +3,11 @@ package com.trick.featureshop.tools;
 import com.trick.featureshop.Canvas; 
 
 import java.awt.*; 
-import java.awt.event.MouseEvent; 
+import java.awt.event.MouseEvent; import java.util.ArrayList; 
 
-public  class  Pencil  extends Tool {
+import com.trick.featureshop.actions.Action; 
+
+public   class  Pencil  extends Tool {
 	
 
     private int previousX, previousY;
@@ -55,6 +57,11 @@ public  class  Pencil  extends Tool {
         previousX = x;
         previousY = y;
     }
+
+	
+	public ArrayList<Action> getActions() {
+		return new ArrayList<Action>();
+	}
 
 
 }

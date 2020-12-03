@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-import com.trick.featureshop.tools.Pencil;
 import com.trick.featureshop.tools.Tool;
 
 public class FeatureShop {

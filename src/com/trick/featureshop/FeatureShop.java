@@ -6,10 +6,9 @@ import javax.swing.*;
 import java.awt.*; 
 import java.awt.event.*; import java.util.ArrayList; 
 
-import com.trick.featureshop.tools.Pencil; 
 import com.trick.featureshop.tools.Tool; 
 
-import com.trick.featureshop.tools.Rectangle; 
+import com.trick.featureshop.tools.Rectangle; import com.trick.featureshop.actions.Action; 
 
 public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	
@@ -25,10 +24,18 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
     private final JFrame frame = new JFrame("FeatureShop");
 
 	
-
-    private final Toolbar.ToolbarListener listener = new Toolbar.ToolbarListener() {
+	
+	private final Toolbar.ToolbarListener listener = new Toolbar.ToolbarListener() {
         @Override
         public void selected(Tool tool) {
+            if (actionbar != null) frame.remove(actionbar);
+
+            ArrayList<Action> actions = tool.getActions();
+            Actionbar replacement = actions.size() > 0 ? new Actionbar(actions) : null;
+
+            if (replacement != null) frame.add(replacement, BorderLayout.PAGE_START);
+
+            actionbar = replacement;
             frame.revalidate();
         }
     };
@@ -240,6 +247,9 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
             toolbar.getActiveTool().mouseWheelMoved(e, getCanvas());
         }
     }
+
+	
+	private Actionbar actionbar = null;
 
 
 }
