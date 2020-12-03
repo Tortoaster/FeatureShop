@@ -71,5 +71,10 @@ public abstract   class  Tool {
     public void mouseWheelMoved(MouseWheelEvent e, Canvas canvas) {
     }
 
+	
+	public ArrayList<Action> getActions() {
+		return new ArrayList<Action>();
+	}
+
 
 }
