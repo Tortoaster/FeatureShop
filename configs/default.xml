@@ -20,5 +20,5 @@
 	<feature automatic="selected" name="Actions"/>
 	<feature automatic="selected" name="ColorPicker"/>
 	<feature manual="selected" name="NumberPicker"/>
-	<feature name="FillShape"/>
+	<feature manual="selected" name="FillShape"/>
 </configuration>
