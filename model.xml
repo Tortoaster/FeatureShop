@@ -34,7 +34,7 @@
 				<or name="Actions">
 					<graphics key="collapsed" value="false"/>
 					<feature name="ColorPicker"/>
-					<feature name="SizePicker"/>
+					<feature name="NumberPicker"/>
 					<feature name="FillShape"/>
 				</or>
 			</and>

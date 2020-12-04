@@ -19,6 +19,6 @@
 	<feature name="History"/>
 	<feature automatic="selected" name="Actions"/>
 	<feature automatic="selected" name="ColorPicker"/>
-	<feature name="SizePicker"/>
+	<feature manual="selected" name="NumberPicker"/>
 	<feature name="FillShape"/>
 </configuration>
