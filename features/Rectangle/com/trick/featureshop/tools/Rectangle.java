@@ -96,5 +96,6 @@ public class Rectangle extends Tool {
         }
         
         canvas.repaint();
+        canvas.onChange();
     }
 }

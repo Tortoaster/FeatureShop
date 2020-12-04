@@ -58,5 +58,12 @@ public  class  Eraser  extends Tool {
         previousY = y;
     }
 
+	
+    
+    @Override
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
+        canvas.onChange();
+    }
+
 
 }

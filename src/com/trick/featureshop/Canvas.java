@@ -1,8 +1,12 @@
 package com.trick.featureshop; 
 
 import javax.swing.*; 
+
+import com.trick.featureshop.tools.Tool; 
 import java.awt.*; 
-import java.awt.image.BufferedImage; import java.util.ArrayList; 
+import java.awt.image.BufferedImage; 
+
+import com.trick.featureshop.LayerView; import java.util.ArrayList; 
 import java.util.Arrays; public   class  Canvas  extends JPanel {
 	
 
@@ -27,26 +31,36 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
     private Color[][] pixels, preview;
 
 	
-
-    public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
-        if (canvasWidth <= 0 || canvasHeight <= 0)
+    
+    private void init  (Color[][] pixels, String name) throws IllegalArgumentException {
+        if (pixels.length <= 0 || pixels[0].length <= 0)
             throw new IllegalArgumentException("width and height must be greater than 0");
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        pixels = emptyPixels();
+        
+        this.pixels = pixels;
         preview = emptyPixels();
         setName(name);
+        
+        layers.add(pixels);
+        layerView.update();
+        
+        setLayout(new BorderLayout());
+        add(layerView, BorderLayout.LINE_END);
+    }
+
+	
+
+    public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
+    	this.canvasWidth = canvasWidth;
+    	this.canvasHeight = canvasHeight;
+    	init(emptyPixels(), name);
     }
 
 	
 
     public Canvas(Color[][] pixels, String name) {
-        canvasWidth = pixels.length;
-        canvasHeight = pixels[0].length;
-
-        this.pixels = pixels;
-        preview = emptyPixels();
-        setName(name);
+        this.canvasWidth = pixels.length;
+        this.canvasHeight = pixels[0].length;
+    	init(pixels, name);
     }
 
 	
@@ -57,7 +71,7 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
 
 	
 
-    public void point(int x, int y, int radius, Color color, boolean preview) {
+    public void point  (int x, int y, int radius, Color color, boolean preview) {
         for (int dY = -radius; dY < radius; dY++) {
             for (int dX = -radius; dX < radius; dX++) {
                 if (dX * dX + dY * dY < radius * radius) {
@@ -67,7 +81,7 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
                         if (preview) {
                             this.preview[fX][fY] = color;
                         } else {
-                            pixels[fX][fY] = color;
+                            layers.get(selectedLayer)[fX][fY] = color;
                         }
                     }
                 }
@@ -155,8 +169,10 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
 
 	
 
-    private void drawImage(Graphics g) {
-        drawLayer(g, pixels);
+    private void drawImage  (Graphics g) {
+        for (Color[][] pixels : layers) {
+            drawLayer(g, pixels);
+        }
         drawLayer(g, preview);
     }
 
@@ -215,20 +231,35 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
     }
 
 	
-    
-    public BufferedImage toBufferedImage() {
+
+    public BufferedImage toBufferedImage  () {
         BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
 
-        for (int y = 0; y < canvasHeight; y++) {
-            for (int x = 0; x < canvasWidth; x++) {
-                g.setColor(pixels[x][y]);
-                g.drawLine(x, y, x, y);
+        for(Color[][] pixels : layers) {
+            for (int y = 0; y < canvasHeight; y++) {
+                for (int x = 0; x < canvasWidth; x++) {
+                    g.setColor(pixels[x][y]);
+                    g.drawLine(x, y, x, y);
+                }
             }
         }
 
         g.dispose();
         return image;
+    }
+
+	
+    
+     private void  onChange__wrappee__Base  () {
+    	
+    }
+
+	
+    
+    public void onChange() {
+    	onChange__wrappee__Base();
+    	layerView.update();
     }
 
 	
@@ -245,18 +276,20 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
     }
 
 	
-	public  interface  ColorCondition {
+
+    public   interface  ColorCondition {
 		
-        boolean accept(Color color);
+        boolean accept  (Color color);
 
 
 	}
 
 	
-	
-	public void spread(int x, int y, Color color, ColorCondition condition) {
-        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(pixels[x][y])) {
-            pixels[x][y] = color;
+
+
+    public void spread  (int x, int y, Color color, ColorCondition condition) {
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight && condition.accept(layers.get(selectedLayer)[x][y])) {
+            layers.get(selectedLayer)[x][y] = color;
             spread(x, y - 1, color, condition);
             spread(x + 1, y, color, condition);
             spread(x, y + 1, color, condition);
@@ -266,9 +299,9 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
 
 	
 
-    public Color eyeDrop(int x, int y) {
+    public Color eyeDrop  (int x, int y) {
         if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
-            return pixels[x][y];
+            return layers.get(selectedLayer)[x][y];
         } else {
             return Color.BLACK;
         }
@@ -319,6 +352,109 @@ import java.util.Arrays; public   class  Canvas  extends JPanel {
 
     public int getPanY() {
         return panY;
+    }
+
+	
+    
+    public static final int PREVIEW_SIZE = 80;
+
+	
+
+    private int selectedLayer;
+
+	
+
+    private ArrayList<Color[][]> layers = new ArrayList<Color[][]>();
+
+	
+
+    private final LayerView layerView = new LayerView(this);
+
+	
+
+    public void newLayer() {
+        layers.add(selectedLayer, emptyPixels());
+    }
+
+	
+
+    public void deleteLayer() {
+        if(layers.size() > 1) {
+            layers.remove(selectedLayer);
+            selectedLayer = Math.max(0, selectedLayer--);
+        }
+    }
+
+	
+
+    public void moveLayerUp() {
+        if(selectedLayer < layers.size() - 1) {
+            Color[][] pixels = layers.remove(selectedLayer);
+            layers.add(selectedLayer + 1, pixels);
+            selectedLayer++;
+        }
+    }
+
+	
+
+    public void moveLayerDown() {
+        if(selectedLayer > 0) {
+            Color[][] pixels = layers.remove(selectedLayer);
+            layers.add(selectedLayer - 1, pixels);
+            selectedLayer--;
+        }
+    }
+
+	
+
+    public int countLayers() {
+        return layers.size();
+    }
+
+	
+
+    public BufferedImage preview(int layer) {
+        BufferedImage image = new BufferedImage(PREVIEW_SIZE, PREVIEW_SIZE, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+        Color[][] pixels = layers.get(layer);
+
+        for (int y = 0; y < PREVIEW_SIZE; y++) {
+            for (int x = 0; x < PREVIEW_SIZE; x++) {
+                g.setColor(pixels[(int) ((float) x / PREVIEW_SIZE * canvasWidth)][(int) ((float) y / PREVIEW_SIZE * canvasHeight)]);
+                g.drawLine(x, y, x, y);
+            }
+        }
+
+        g.dispose();
+        return image;
+    }
+
+	
+
+    private ArrayList<Color[][]> cloneLayers(ArrayList<Color[][]> layers) {
+        ArrayList<Color[][]> clone = new ArrayList<Color[][]>();
+
+        for (Color[][] p : layers) {
+            Color[][] clonePixels = new Color[canvasWidth][canvasHeight];
+            for (int x = 0; x < canvasWidth; x++) {
+                if (canvasHeight >= 0) System.arraycopy(p[x], 0, clonePixels[x], 0, canvasHeight);
+            }
+            clone.add(clonePixels);
+        }
+
+        return clone;
+    }
+
+	
+    
+    public int getSelectedLayer() {
+    	return selectedLayer;
+    }
+
+	
+    
+    public void setSelectedLayer(int selectedLayer) {
+    	this.selectedLayer = selectedLayer;
     }
 
 	

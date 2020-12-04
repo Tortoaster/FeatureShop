@@ -68,5 +68,12 @@ public  class  Pencil  extends Tool {
         previousY = y;
     }
 
+	
+    
+    @Override
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
+        canvas.onChange();
+    }
+
 
 }

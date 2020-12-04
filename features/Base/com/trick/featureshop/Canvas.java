@@ -1,6 +1,9 @@
 package com.trick.featureshop;
 
 import javax.swing.*;
+
+import com.trick.featureshop.tools.Tool;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -15,24 +18,25 @@ public class Canvas extends JPanel {
     private int top;
 
     private Color[][] pixels, preview;
-
-    public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
-        if (canvasWidth <= 0 || canvasHeight <= 0)
+    
+    private void init(Color[][] pixels, String name) throws IllegalArgumentException {
+        if (pixels.length <= 0 || pixels[0].length <= 0)
             throw new IllegalArgumentException("width and height must be greater than 0");
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        pixels = emptyPixels();
+        this.pixels = pixels;
         preview = emptyPixels();
         setName(name);
     }
 
-    public Canvas(Color[][] pixels, String name) {
-        canvasWidth = pixels.length;
-        canvasHeight = pixels[0].length;
+    public Canvas(int canvasWidth, int canvasHeight, String name) throws IllegalArgumentException {
+    	this.canvasWidth = canvasWidth;
+    	this.canvasHeight = canvasHeight;
+    	init(emptyPixels(), name);
+    }
 
-        this.pixels = pixels;
-        preview = emptyPixels();
-        setName(name);
+    public Canvas(Color[][] pixels, String name) {
+        this.canvasWidth = pixels.length;
+        this.canvasHeight = pixels[0].length;
+    	init(pixels, name);
     }
 
     public void point(int x, int y, int radius, Color color) {
@@ -188,6 +192,10 @@ public class Canvas extends JPanel {
 
         g.dispose();
         return image;
+    }
+    
+    public void onChange() {
+    	
     }
 
     

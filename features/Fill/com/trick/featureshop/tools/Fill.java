@@ -40,4 +40,10 @@ public class Fill extends Tool {
 
         canvas.repaint();
     }
+    
+    @Override
+    public void mouseReleased(MouseEvent e, Canvas canvas) {
+        canvas.onChange();
+    }
+    
 }

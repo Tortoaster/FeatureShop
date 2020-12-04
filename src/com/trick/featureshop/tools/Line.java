@@ -73,6 +73,7 @@ public  class  Line  extends Tool {
         canvas.clearPreview();
         canvas.line(fromX, fromY, x, y, getRadius(), getColor());
         canvas.repaint();
+        canvas.onChange();
     }
 
 
