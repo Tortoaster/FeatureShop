@@ -74,8 +74,17 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
     }
 
 	
-	 private static ArrayList<Tool>  getTools__wrappee__Line  () {
+	 private static ArrayList<Tool>  getTools__wrappee__EyeDropper  () {
     	ArrayList<Tool> tools = getTools__wrappee__Base();
+    	
+    	tools.add(new EyeDropper());
+    	
+    	return tools;
+    }
+
+	
+	 private static ArrayList<Tool>  getTools__wrappee__Line  () {
+    	ArrayList<Tool> tools = getTools__wrappee__EyeDropper();
     	
     	tools.add(new Line());
     	

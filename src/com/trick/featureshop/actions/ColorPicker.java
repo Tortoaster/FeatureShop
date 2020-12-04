@@ -59,11 +59,14 @@ public  class  ColorPicker  implements Action {
 
 	
 
-    public static ImageIcon createIcon(Color main, int width, int height) {
+    public static ImageIcon createIcon(Color color, int width, int height) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics graphics = image.getGraphics();
-        graphics.setColor(main);
-        graphics.fillRect(0, 0, width, height);
+        Graphics g = image.getGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width, height);
+        g.setColor(color);
+        g.fillRect(0, 0, width, height);
+        g.dispose();
         image.flush();
         return new ImageIcon(image);
     }
