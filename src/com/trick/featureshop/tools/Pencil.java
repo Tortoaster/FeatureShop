@@ -16,6 +16,18 @@ public  class  Pencil  extends Tool {
 
 	
 
+    public int getRadius() {
+    	return 1;
+    }
+
+	
+    
+    public Color getColor() {
+    	return Color.BLACK;
+    }
+
+	
+    
     @Override
     public String getName() {
         return "Pencil";
@@ -35,7 +47,7 @@ public  class  Pencil  extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.point(x, y, 1, Color.BLACK);
+        canvas.point(x, y, getRadius(), getColor());
         canvas.repaint();
 
         previousX = x;
@@ -49,7 +61,7 @@ public  class  Pencil  extends Tool {
         int x = canvas.screenToCanvasX(e.getX());
         int y = canvas.screenToCanvasY(e.getY());
 
-        canvas.line(previousX, previousY, x, y, 1, Color.BLACK);
+        canvas.line(previousX, previousY, x, y, getRadius(), getColor());
         canvas.repaint();
 
         previousX = x;

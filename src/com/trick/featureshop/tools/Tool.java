@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent; 
 import java.awt.event.MouseWheelEvent; import com.trick.featureshop.actions.Action; 
 import java.util.ArrayList; 
+import java.util.List;  
 
 public abstract   class  Tool {
 	
@@ -72,8 +73,12 @@ public abstract   class  Tool {
     }
 
 	
-	public ArrayList<Action> getActions() {
-		return new ArrayList<Action>();
+	protected final List<Action> actions = new ArrayList<Action>();
+
+	
+	
+	public List<Action> getActions() {
+		return actions;
 	}
 
 
