@@ -29,6 +29,7 @@
 					<feature name="Save"/>
 					<feature name="Open"/>
 					<feature name="Blur"/>
+					<feature name="Clear"/>
 				</and>
 				<feature name="History"/>
 				<or name="Actions">

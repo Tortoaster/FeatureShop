@@ -8,7 +8,7 @@ import java.awt.event.*; import java.util.ArrayList;
 
 import com.trick.featureshop.tools.Tool; 
 
-import com.trick.featureshop.tools.Rectangle; import com.trick.featureshop.actions.Action; 
+import com.trick.featureshop.tools.Rectangle; import com.trick.featureshop.plugins.Plugin; import com.trick.featureshop.plugins.New; import com.trick.featureshop.plugins.Save; import com.trick.featureshop.plugins.Open; import com.trick.featureshop.plugins.Blur; import com.trick.featureshop.plugins.Clear; import com.trick.featureshop.actions.Action; 
 import java.util.List; 
 
 public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -46,8 +46,7 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
     private final Toolbar toolbar = new Toolbar(getTools(), listener, this);
 
 	
-
-    public FeatureShop() {
+    public FeatureShop  () {
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -58,6 +57,19 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
 
         frame.add(canvasPanes, BorderLayout.CENTER);
         frame.add(toolbar, BorderLayout.LINE_END);
+
+        frame.pack();
+        frame.setVisible(true);
+    
+        frame.setPreferredSize(new Dimension(800, 600));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
+        toolbar.setBackground(Color.lightGray);
+
+        frame.add(canvasPanes, BorderLayout.CENTER);
+        frame.add(toolbar, BorderLayout.LINE_END);
+        frame.setJMenuBar(new Menubar(getPlugins(), this));
 
         frame.pack();
         frame.setVisible(true);
@@ -256,6 +268,58 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
         if(getCanvas() != null) {
             toolbar.getActiveTool().mouseWheelMoved(e, getCanvas());
         }
+    }
+
+	
+    
+      static private List<Plugin>  getPlugins__wrappee__Plugins  () {
+    	return new ArrayList<Plugin>();
+    }
+
+	
+	
+	 private List<Plugin>  getPlugins__wrappee__New  () {
+		List<Plugin> plugins = getPlugins__wrappee__Plugins();
+		plugins.add(new New());
+		return plugins;
+	}
+
+	
+	
+	 private List<Plugin>  getPlugins__wrappee__Save  () {
+		List<Plugin> plugins = getPlugins__wrappee__New();
+		plugins.add(new Save());
+		return plugins;
+	}
+
+	
+	
+	 private List<Plugin>  getPlugins__wrappee__Open  () {
+		List<Plugin> plugins = getPlugins__wrappee__Save();
+		plugins.add(new Open());
+		return plugins;
+	}
+
+	
+	
+	 private List<Plugin>  getPlugins__wrappee__Blur  () {
+		List<Plugin> plugins = getPlugins__wrappee__Open();
+		plugins.add(new Blur());
+		return plugins;
+	}
+
+	
+	
+	public List<Plugin> getPlugins() {
+		List<Plugin> plugins = getPlugins__wrappee__Blur();
+		plugins.add(new Clear());
+		return plugins;
+	}
+
+	
+    
+    public JFrame getFrame() {
+        return frame;
     }
 
 	

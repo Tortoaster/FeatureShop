@@ -2,6 +2,7 @@ package com.trick.featureshop;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Canvas extends JPanel {
 
@@ -173,4 +174,29 @@ public class Canvas extends JPanel {
         g.setColor(BACKGROUND);
         g.drawRect(left - 1, top - 1, (int) canvasWidth + 1, (int) canvasHeight + 1);
     }
+    
+    public BufferedImage toBufferedImage() {
+        BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+
+        for (int y = 0; y < canvasHeight; y++) {
+            for (int x = 0; x < canvasWidth; x++) {
+                g.setColor(pixels[x][y]);
+                g.drawLine(x, y, x, y);
+            }
+        }
+
+        g.dispose();
+        return image;
+    }
+
+    
+    public Color[][] getPixels() {
+    	return pixels;
+    }
+    
+    public void setPixels(Color[][] pixels) {
+    	this.pixels = pixels;
+    }
+    
 }

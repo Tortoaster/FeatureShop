@@ -2,8 +2,8 @@ package com.trick.featureshop;
 
 import javax.swing.*; 
 import java.awt.*; 
-
-public   class  Canvas  extends JPanel {
+import java.awt.image.BufferedImage; import java.util.ArrayList; 
+import java.util.Arrays; public   class  Canvas  extends JPanel {
 	
 
     private static final Color BACKGROUND = Color.DARK_GRAY;
@@ -215,6 +215,36 @@ public   class  Canvas  extends JPanel {
     }
 
 	
+    
+    public BufferedImage toBufferedImage() {
+        BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+
+        for (int y = 0; y < canvasHeight; y++) {
+            for (int x = 0; x < canvasWidth; x++) {
+                g.setColor(pixels[x][y]);
+                g.drawLine(x, y, x, y);
+            }
+        }
+
+        g.dispose();
+        return image;
+    }
+
+	
+
+    
+    public Color[][] getPixels() {
+    	return pixels;
+    }
+
+	
+    
+    public void setPixels(Color[][] pixels) {
+    	this.pixels = pixels;
+    }
+
+	
 	public  interface  ColorCondition {
 		
         boolean accept(Color color);
@@ -289,6 +319,44 @@ public   class  Canvas  extends JPanel {
 
     public int getPanY() {
         return panY;
+    }
+
+	
+    public void blur() {
+        Color[][] currentPixels = getPixels();
+        Color[][] newPixels = new Color[canvasWidth][canvasHeight];
+
+        for (int x = 0; x < canvasWidth; x++) {
+            for (int y = 0; y < canvasHeight; y++) {
+
+                ArrayList<Color> neighbours = new ArrayList<Color>();
+
+                for (int i = Math.max(0, x - 1); i <= Math.min(canvasWidth - 1, x + 1); i++) {
+                    neighbours.addAll(Arrays.asList(currentPixels[i]).subList(Math.max(0, y - 1), Math.min(canvasHeight - 1, y + 1) + 1));
+                }
+
+                int r = 0, g = 0, b = 0, a = 0;
+                for (Color c : neighbours) {
+                    r += c.getRed();
+                    g += c.getGreen();
+                    b += c.getBlue();
+                    a += c.getAlpha();
+                }
+
+                int count = neighbours.size();
+
+                newPixels[x][y] = new Color(r / count, g / count, b / count, a / count);
+            }
+        }
+
+        setPixels(newPixels);
+        repaint();
+    }
+
+	
+	
+    public void clear() {
+    	setPixels(emptyPixels());
     }
 
 
