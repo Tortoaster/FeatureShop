@@ -8,7 +8,8 @@ import java.awt.event.*; import java.util.ArrayList;
 
 import com.trick.featureshop.tools.Tool; 
 
-import com.trick.featureshop.tools.Rectangle; import com.trick.featureshop.plugins.Plugin; import com.trick.featureshop.plugins.New; import com.trick.featureshop.plugins.Save; import com.trick.featureshop.plugins.Open; import com.trick.featureshop.plugins.Blur; import com.trick.featureshop.plugins.Clear; import com.trick.featureshop.actions.Action; 
+import com.trick.featureshop.tools.Rectangle; import com.trick.featureshop.plugins.Plugin; import com.trick.featureshop.plugins.New; import com.trick.featureshop.plugins.Save; import com.trick.featureshop.plugins.Open; import com.trick.featureshop.plugins.Blur; import com.trick.featureshop.plugins.Clear; import com.trick.featureshop.plugins.Undo; 
+import com.trick.featureshop.plugins.Redo; import com.trick.featureshop.actions.Action; 
 import java.util.List; 
 
 public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -310,9 +311,18 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
 
 	
 	
-	public List<Plugin> getPlugins() {
+	 private List<Plugin>  getPlugins__wrappee__Clear  () {
 		List<Plugin> plugins = getPlugins__wrappee__Blur();
 		plugins.add(new Clear());
+		return plugins;
+	}
+
+	
+	
+	public List<Plugin> getPlugins() {
+		List<Plugin> plugins = getPlugins__wrappee__Clear();
+		plugins.add(new Undo());
+		plugins.add(new Redo());
 		return plugins;
 	}
 

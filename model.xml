@@ -30,8 +30,8 @@
 					<feature name="Open"/>
 					<feature name="Blur"/>
 					<feature name="Clear"/>
+					<feature name="History"/>
 				</and>
-				<feature name="History"/>
 				<or name="Actions">
 					<graphics key="collapsed" value="false"/>
 					<feature name="ColorPicker"/>

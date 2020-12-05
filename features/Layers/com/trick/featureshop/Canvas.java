@@ -23,12 +23,14 @@ public class Canvas extends JPanel {
     private final LayerView layerView = new LayerView(this);
     
     private void init(Color[][] pixels, String name) throws IllegalArgumentException {
-        if (pixels.length <= 0 || pixels[0].length <= 0)
-            throw new IllegalArgumentException("width and height must be greater than 0");
-        
-        this.pixels = pixels;
-        preview = emptyPixels();
-        setName(name);
+    	original(pixels, name);
+//        if (pixels.length <= 0 || pixels[0].length <= 0)
+//            throw new IllegalArgumentException("width and height must be greater than 0");
+//        
+//        
+//        this.pixels = pixels;
+//        preview = emptyPixels();
+//        setName(name);
         
         layers.add(pixels);
         layerView.update();
@@ -162,6 +164,29 @@ public class Canvas extends JPanel {
     public void onChange() {
     	original();
     	layerView.update();
+    }
+    
+    private void doRedo() {
+        original();
+        layerView.update();
+    }
+    
+    private void doUndo() {
+        original();
+        layerView.update();
+    }
+    
+    public void save() {
+        original();
+        layerView.update();
+    }
+    
+    private ArrayList<Color[][]> getLayers() {
+    	return layers;
+    }
+    
+    private void setLayers(ArrayList<Color[][]> l) {
+    	this.layers = l;
     }
     
     public int getSelectedLayer() {

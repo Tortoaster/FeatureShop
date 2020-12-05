@@ -34,7 +34,6 @@ public class ColorPicker implements Action {
 
     @Override
     public String getName() {
-    	System.out.println(name);
         return name;
     }
 

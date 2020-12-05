@@ -6,6 +6,8 @@ import com.trick.featureshop.tools.Tool;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Canvas extends JPanel {
 
@@ -196,6 +198,16 @@ public class Canvas extends JPanel {
     
     public void onChange() {
     	
+    }
+    
+    private ArrayList<Color[][]> getLayers() {
+    	ArrayList<Color[][]> l = new ArrayList<Color[][]>();
+    	l.add(pixels);
+    	return l;
+    }
+    
+    private void setLayers(ArrayList<Color[][]> l) {
+    	this.pixels = l.get(0);
     }
 
     
