@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature name="FeatureShop"/>
+	<feature name="Base"/>
+	<feature name="Tools"/>
+	<feature name="EyeDropper"/>
+	<feature name="Line"/>
+	<feature name="Fill"/>
+	<feature name="Eraser"/>
+	<feature name="Rectangle"/>
+	<feature name="Zoom"/>
+	<feature name="Pan"/>
+	<feature name="Layers"/>
+	<feature name="Plugins"/>
+	<feature name="New"/>
+	<feature name="Save"/>
+	<feature name="Open"/>
+	<feature name="Blur"/>
+	<feature name="Clear"/>
+	<feature name="History"/>
+	<feature name="Actions"/>
+	<feature name="ColorPicker"/>
+	<feature name="NumberPicker"/>
+	<feature name="FillShape"/>
+</configuration>
