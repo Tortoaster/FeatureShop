@@ -1,4 +1,6 @@
 import com.trick.featureshop.actions.Action;
+import com.trick.featureshop.tools.Tool;
+
 import java.util.List;
 
 public class FeatureShop {

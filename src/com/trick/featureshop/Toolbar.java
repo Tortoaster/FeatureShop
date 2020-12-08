@@ -29,8 +29,6 @@ public  class  Toolbar  extends JPanel {
     public Toolbar(ArrayList<Tool> tools, ToolbarListener listener, FeatureShop shop) throws IllegalArgumentException {
         if (tools.size() < 1) throw new IllegalArgumentException("You must include at least 1 tool.");
 
-        activeTool = tools.get(0);
-
         for (Tool t: tools) {
             JButton button = new JButton();
             button.addActionListener(new ActionListener() {
@@ -49,6 +47,9 @@ public  class  Toolbar  extends JPanel {
             }
             add(button);
         }
+        
+        activeTool = tools.get(0);
+        listener.selected(activeTool);
     }
 
 	

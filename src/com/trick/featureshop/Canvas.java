@@ -425,7 +425,7 @@ public   class  Canvas  extends JPanel {
     public void deleteLayer() {
         if(layers.size() > 1) {
             layers.remove(selectedLayer);
-            selectedLayer = Math.max(0, selectedLayer--);
+            selectedLayer = Math.max(0, selectedLayer - 1);
         }
     }
 

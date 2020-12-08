@@ -5,11 +5,11 @@ import com.trick.featureshop.tools.*;
 import javax.swing.*; 
 import java.awt.*; 
 import java.awt.event.*; import java.util.ArrayList; 
-
 import com.trick.featureshop.tools.Tool; 
 
 import com.trick.featureshop.tools.Rectangle; import com.trick.featureshop.plugins.Plugin; import com.trick.featureshop.plugins.New; import com.trick.featureshop.plugins.Save; import com.trick.featureshop.plugins.Open; import com.trick.featureshop.plugins.Blur; import com.trick.featureshop.plugins.Clear; import com.trick.featureshop.plugins.Undo; 
 import com.trick.featureshop.plugins.Redo; import com.trick.featureshop.actions.Action; 
+
 import java.util.List; 
 
 public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -44,19 +44,21 @@ public   class  FeatureShop  implements KeyListener, MouseListener, MouseMotionL
 
 	
 
-    private final Toolbar toolbar = new Toolbar(getTools(), listener, this);
+    private final Toolbar toolbar;
 
 	
     public FeatureShop  () {
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
-        toolbar.setBackground(Color.lightGray);
-
         addCanvas(new Canvas(Canvas.DEFAULT_SIZE, Canvas.DEFAULT_SIZE, "Untitled"));
 
         frame.add(canvasPanes, BorderLayout.CENTER);
+        
+        toolbar = new Toolbar(getTools(), listener, this);
+        toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
+        toolbar.setBackground(Color.lightGray);
+        
         frame.add(toolbar, BorderLayout.LINE_END);
 
         frame.pack();
