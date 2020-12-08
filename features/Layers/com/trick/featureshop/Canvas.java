@@ -185,6 +185,14 @@ public class Canvas extends JPanel {
     	return layers;
     }
     
+    public Color[][] getPixels() {
+    	return layers.get(selectedLayer);
+    }
+    
+    public void setPixels(Color[][] pixels) {
+    	layers.set(selectedLayer, pixels);
+    }
+    
     private void setLayers(ArrayList<Color[][]> l) {
     	this.layers = l;
     }

@@ -10,7 +10,7 @@
 	<feature manual="selected" name="Rectangle"/>
 	<feature automatic="selected" manual="selected" name="Zoom"/>
 	<feature manual="selected" name="Pan"/>
-	<feature name="Layers"/>
+	<feature manual="selected" name="Layers"/>
 	<feature automatic="selected" manual="selected" name="Plugins"/>
 	<feature manual="selected" name="New"/>
 	<feature manual="selected" name="Save"/>
