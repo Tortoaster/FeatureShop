@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Canvas extends JPanel {
-
+	
+	public static final int DEFAULT_SIZE = 32;
+	
     private static final Color BACKGROUND = Color.DARK_GRAY;
     public static final Color EMPTY = new Color(0, 0, 0, 0);
 

@@ -38,8 +38,8 @@ public class New implements Plugin {
 
         JTextField textField = new JTextField("", 16);
 
-        SpinnerModel widthModel = new SpinnerNumberModel(128, 1, 1024, 1);
-        SpinnerModel heightModel = new SpinnerNumberModel(128, 1, 1024, 1);
+        SpinnerModel widthModel = new SpinnerNumberModel(Canvas.DEFAULT_SIZE, 1, 128, 1);
+        SpinnerModel heightModel = new SpinnerNumberModel(Canvas.DEFAULT_SIZE, 1, 128, 1);
 
         JSpinner widthSpinner = new JSpinner(widthModel);
         JSpinner heightSpinner = new JSpinner(heightModel);

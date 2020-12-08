@@ -12,7 +12,11 @@ import java.util.Arrays;
 
 public   class  Canvas  extends JPanel {
 	
+	
+	public static final int DEFAULT_SIZE = 32;
 
+	
+	
     private static final Color BACKGROUND = Color.DARK_GRAY;
 
 	

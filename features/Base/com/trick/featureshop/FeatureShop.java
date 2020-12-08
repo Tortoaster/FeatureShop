@@ -31,7 +31,7 @@ public class FeatureShop implements KeyListener, MouseListener, MouseMotionListe
         toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
         toolbar.setBackground(Color.lightGray);
 
-        addCanvas(new Canvas(256,256, "Untitled"));
+        addCanvas(new Canvas(Canvas.DEFAULT_SIZE, Canvas.DEFAULT_SIZE, "Untitled"));
 
         frame.add(canvasPanes, BorderLayout.CENTER);
         frame.add(toolbar, BorderLayout.LINE_END);
